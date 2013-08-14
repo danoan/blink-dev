@@ -1,90 +1,156 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html>
 
-{% block topbar %}
+	<head>
 
-  <!-- By passing a valid access token here, we are able to display -->
-  <!-- the user's images without having to download or prepare -->
-  <!-- them ahead of time -->
-  <p id="picture" style="background-image: url(https://graph.facebook.com/me/picture?type=normal&access_token={{token}})"></p>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width; initial-scale=1.0">
+		<link rel="stylesheet" href="../css/normalize.css"></link>
+ 		<link rel="stylesheet" href="../css/mygs-fluid.css"></link> 
+		<link rel="stylesheet" href="../css/style.css"></link>
+		<script src="../js/jquery-1.8.2.min.js"></script>
 
-  <div>
-    <h1>Oh yeah, <strong>{{me.name}}</strong></h1>
-    <p class="tagline">
-      This is your app
-      <a href="{{app.link}}">{{app.name}}</a>
-    </p>
-    <div id="share-app">
-      <p>Share your app:</p>
-      <ul>
-        <li>
-          <a href="#" class="facebook-button" id="postToWall" data-url="{{ url }}">
-            <span class="plus">Post to Wall</span>
-          </a>
-        </li>
-        <li>
-          <a href="#" class="facebook-button speech-bubble" id="sendToFriends" data-url="{{ url }}">
-            <span class="speech-bubble">Send Message</span>
-          </a>
-        </li>
-        <li>
-          <a href="#" class="facebook-button apprequests" id="sendRequest" data-message="Test this awesome app">
-            <span class="apprequests">Send Requests</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div>
+	</head>
 
-{% endblock %}
+	<body>
+		<div class="all">
 
-{% block content %}
-<section class="clearfix" id="samples">
-      <h1>Examples of the Facebook Graph API</h1>
-      <div class="list">
-        <h3>A few of your friends</h3>
-        <ul class="friends">{% for friend in friends.data %}
-        <li>
-          <a href="#" onclick="window.open('http://www.facebook.com/{{friend.id}}')">
-            <img src="https://graph.facebook.com/{{friend.id}}/picture" alt="{{friend.name}}">
-            {{friend.name}}
-          </a>
-        </li>{% endfor %}</ul>
-      </div>
-      <div class="list inline">
-        <h3>Recent photos</h3>
-        <ul class="photos">
-          {% for photo in photos.data %}
-            {% if loop.index0%4 == 0 %}
-          <li class="first-column" style="background-image: url({{photo.picture}})">
-            {% else %}
-          <li style="background-image: url({{photo.picture}})">
-            {% endif %}
-            <a href="#" onclick="window.open('http://www.facebook.com/{{photo.id}}')">
-              {{photo.name}}
-            </a>
-          </li>
-          {% endfor %}
-        </ul>
-      </div>
-      <div class="list">
-        <h3>Things you like</h3>
-        <ul class="things">{% for like in likes.data %}
-        <li>
-          <a href="#" onclick="window.open('http://www.facebook.com/{{like.id}}')">
-            <img src="https://graph.facebook.com/{{like.id}}/picture?type=square" alt="{{like.name}}">
-            {{like.name}}
-          </a>
-        </li>{% endfor %}</ul>
-      </div>
-      <div class="list">
-        <h3>Friends using this app</h3>
-        <ul class="friends">{% for friend in app_friends %}
-        <li>
-          <a href="#" onclick="window.open('http://www.facebook.com/{{friend.uid}}')">
-            <img src="https://graph.facebook.com/{{friend.uid}}/picture?type=square" alt="{{friend.name}}">
-            {{friend.name}}
-            </a>
-        </li>{% endfor %}</ul>
-      </div>
-    </section>
-{% endblock%}
+			<div class="row block-content-format zero-block-content">
+
+				<div class="extend">
+					<div class="col6 extend-left">
+						<div class="panel-links-simple">
+							<div class="block-social">
+								<a><img src="../img/twitter-bird-dark-bgs.png" height="25px" /></a>
+								<a><img src="../img/FB-f-Logo__white_58.png" height="25px" /></a>
+							</div>
+							<div class="block-apps">
+								<a><img src="../img/facebook_badge.png" height="40px" /></a>
+							</div>
+						</div>
+
+						<div class="block-logo">
+							<img src="../img/blink-logo-final-spotlight-2x1.svg" width="100%" />
+						</div>					
+
+					</div>
+				
+					<div class="col6">
+						<div class="block-video">
+							<video width="100%" controls>
+	 							<source src="../mov/blink_movie_2.mp4" type="video/mp4">
+							  	<source src="../mov/blink_movie.wmv" type="video/wmv">
+								Your browser does not support the video tag.
+							</video>
+						</div>
+					</div>
+				</div>	
+
+				<div class="shrink">
+					<div class="col4 shrink-left">
+			
+						<div class="panel-links-simple">
+							<div class="block-social">
+								<a><img src="../img/twitter-bird-dark-bgs.png" height="25px" /></a>
+								<a><img src="../img/FB-f-Logo__white_58.png" height="25px" /></a>
+								<a><img src="../img/facebook_badge.png" height="25px" /></a>
+							</div>
+						</div>
+
+						<div class="block-logo">							
+							<img src="../img/blink-logo-final-spotlight.svg" width="100%" />
+						</div>
+
+						<div class="block-text">
+							<span>Blink é a maneira mais divertida de aprender sobre novos assuntos e conhecer gente nova. Por que assistir a video aulas chatas quando você pode trocar ideias com pessoas de verdade? Torne-se um Blinker você também!</span>
+						</div>											
+
+						<div class="panel-links">
+							<div class="block-social">
+								<a>Watch our video</a>
+								<a><img src="../img/play-button.png" height="25px" /></a>
+								<img src="../img/separator.png" height="25px" />
+								<a><img src="../img/FB-f-Logo__white_58.png" height="25px" /></a>
+								<img src="../img/separator.png" height="25px" />
+								<a><img src="../img/twitter-bird-dark-bgs.png" height="25px" /></a>
+							</div>
+						</div>							
+
+					</div>
+				
+					<div class="col8">
+						<div class="block-video">
+							<video width="100%" controls>
+	 							<source src="../mov/blink_movie_2.mp4" type="video/mp4">
+							  	<source src="../mov/blink_movie.wmv" type="video/wmv">
+								Your browser does not support the video tag.
+							</video>
+						</div>
+					</div>	
+				</div>
+			</div>
+
+			<div class="row block-content-format first-block-content">
+				<div class="col4 need-padding">
+					<h1>Procure um assunto</h1>
+					<span>
+						Pode ser sobre fotografia, Budismo, Kart, Desenho e tudo aquilo que você puder imaginar
+					</span>
+				</div>
+				<div class="col4 need-padding">
+					<h1>Escolha seu Blinker</h1>
+					<span>
+						Compare sua confiablidade, troque mensagens, veja as suas classificações, o seu histórico de Blinks e também o quão perto está de você.
+					</span>
+				</div>
+				<div class="col4">
+					<h1>Marque o seu Blink</h1>
+					<span>
+						Pode ser em um café, parque, lanchonete, barzinho com os amigos ou qualquer outro lugar público em que você se sinta à vontade.
+					</span>							
+				</div>			
+			</div>		
+
+			<div class="row block-content-format second-block-content">
+				<div class="col6">
+					Imagem
+				</div>
+
+				<div class="col6">
+					<h1>Descubra novos interesses e talentos em você</h1>
+					<span>
+						Encontre Blinkers bem pertinho de você pelo aplicativo do Facebook e em breve pelo seu celular. Deixe-se inspirar pelos tópicos excitantes de nossos Blinkers e explore todo o seu potencial. Quem sabem você não é um novo Picasso?
+					</span>
+				</div>
+			</div>			
+
+			<div class="row block-content-format third-block-content">
+				<div class="col6">
+					<h1>Faça contatos e divulgue o seu trabalho</h1>
+					<span>
+						Crie Blinks em tópicos que você saiba tudo. Impressione os seus Blinkers e passe a ter não somente um novo amigo, mas um novo divulgador de seu trabalho!
+					</span>
+				</div>					
+
+				<div class="col6">
+					Imagem
+				</div>
+			</div>	
+
+			<div class="row block-content-format fourth-block-content">
+				<div class="col6">
+					Imagem
+				</div>
+
+				<div class="col6">
+					<h1>Conheça gente e faça novos amigos</h1>
+					<span>
+						O seu Blinker é uma pessoa que partilha do mesmo interesse que você e não há nada melhor do que isso para se iniciar uma nova amizade. 
+					</span>
+				</div>					
+			</div>								
+
+		</div>
+	</body>
+
+</html>

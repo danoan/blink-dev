@@ -1,0 +1,432 @@
+.row {
+  width: 100%;
+  margin-left: 0px !important; }
+
+@media screen and (min-width: 1260px) {
+  /*.row{ width: $screenWidth+0px; }*/
+  .col1 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 8.33%; }
+
+  .col2 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 16.66%; }
+
+  .col3 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 24.99%; }
+
+  .col4 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 33.32%; }
+
+  .col5 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 41.65%; }
+
+  .col6 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 49.98%; }
+
+  .col7 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 58.31%; }
+
+  .col8 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 66.64%; }
+
+  .col9 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 74.97%; }
+
+  .col10 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 83.3%; }
+
+  .col11 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 91.63%; }
+
+  .col12 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 99.96%; } }
+@media screen and (min-width: 860px) and (max-width: 1259px) {
+  /*.row{ width: $screenWidth+0px; }*/
+  .col1 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 8.33%; }
+
+  .col2 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 16.66%; }
+
+  .col3 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 24.99%; }
+
+  .col4 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 33.32%; }
+
+  .col5 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 41.65%; }
+
+  .col6 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 49.98%; }
+
+  .col7 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 58.31%; }
+
+  .col8 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 66.64%; }
+
+  .col9 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 74.97%; }
+
+  .col10 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 83.3%; }
+
+  .col11 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 91.63%; }
+
+  .col12 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 99.96%; } }
+@media screen and (min-width: 601px) and (max-width: 859px) {
+  /*.row{ width: $screenWidth+0px; }*/
+  .col1 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 8.33%; }
+
+  .col2 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 16.66%; }
+
+  .col3 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 24.99%; }
+
+  .col4 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 33.32%; }
+
+  .col5 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 41.65%; }
+
+  .col6 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 49.98%; }
+
+  .col7 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 58.31%; }
+
+  .col8 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 66.64%; }
+
+  .col9 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 74.97%; }
+
+  .col10 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 83.3%; }
+
+  .col11 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 91.63%; }
+
+  .col12 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: left;
+    width: 99.96%; } }
+@media screen and (min-width: 421px) and (max-width: 600px) {
+  /*.row{ width: $screenWidth+0%; }*/
+  .col1 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col2 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col3 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col4 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col5 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col6 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col7 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col8 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col9 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col10 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col11 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col12 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; } }
+@media screen and (max-width: 420px) {
+  /*.row{ width: $screenWidth+0%; }*/
+  .col1 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col2 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col3 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col4 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col5 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col6 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col7 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col8 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col9 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col10 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col11 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; }
+
+  .col12 {
+    /*background-color: yellow;*/
+    margin-left: 0px;
+    box-sizing: border-box;
+    float: "none";
+    width: 100%; } }
+.row {
+  /*background-color: blue;*/
+  float: left; }
