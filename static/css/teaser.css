@@ -2,12 +2,13 @@
 body {
   width: 100%;
   background-color: #8dc640 !important;
-  box-sizing: border-box; }
+  box-sizing: border-box;
+  padding: 4em 0; }
 
 .all {
   height: 480px;
   width: 640px;
-  margin: 100px auto;
+  margin: 0 auto;
   background-color: #fdc012;
   box-shadow: 0px 0px 10px 6px #fadd7b;
   box-sizing: border-box; }
@@ -37,11 +38,27 @@ body {
     padding: 0.32em 0; }
 
 .field-container {
+  position: relative;
   padding-left: 0.96em; }
   .field-container input {
     width: 100%;
     box-sizing: border-box;
     height: 30px !important; }
+
+.suggestions-container {
+  position: absolute;
+  margin-top: 40px;
+  margin-left: 20px; }
+  .suggestions-container span {
+    color: #BBB;
+    font-size: 19px; }
+
+.button-container button {
+  width: 300px;
+  left: 50%;
+  margin-left: -150px;
+  position: relative;
+  margin-top: 0.32em; }
 
 .teaser-image {
   width: 240px;
@@ -49,8 +66,8 @@ body {
 
 @media screen and (min-width: 601px) and (max-width: 859px) {
   .all {
-    height: 420px;
-    width: 640px;
+    height: 440px;
+    width: 600px;
     margin: 25px auto; }
 
   .block-content-format {
@@ -63,7 +80,7 @@ body {
       font-size: 20px; } }
 @media screen and (min-width: 471px) and (max-width: 600px) {
   .all {
-    height: 560px;
+    height: 600px;
     width: 470px;
     margin: 25px auto; }
 
@@ -77,10 +94,13 @@ body {
       font-size: 20px; }
 
   .teaser-container {
-    text-align: center; } }
+    text-align: center; }
+
+  .suggestions-container {
+    margin-top: -39px; } }
 @media screen and (max-width: 470px) {
   .all {
-    height: 640px;
+    height: 680px;
     width: 260px;
     margin: 25px auto; }
 
@@ -94,4 +114,15 @@ body {
       font-size: 18px; }
 
   .teaser-container {
-    text-align: center; } }
+    text-align: center; }
+
+  .suggestions-container {
+    margin-top: -37px; }
+    .suggestions-container span {
+      font-size: 13px; }
+
+  .button-container button {
+    width: 200px;
+    left: 50%;
+    margin-left: -100px;
+    position: relative; } }

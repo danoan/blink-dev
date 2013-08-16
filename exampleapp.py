@@ -19,6 +19,20 @@ app_url = 'https://graph.facebook.com/{0}'.format(FB_APP_ID)
 FB_APP_NAME = json.loads(requests.get(app_url).content).get('name')
 FB_APP_SECRET = os.environ.get('FACEBOOK_SECRET')
 
+import psycopg2
+import urlparse
+
+urlparse.uses_netloc.append("postgres")
+url = urlparse.urlparse(os.environ["DATABASE_URL"])
+
+conn = psycopg2.connect(
+    database=url.path[1:],
+    user=url.username,
+    password=url.password,
+    host=url.hostname,
+    port=url.port
+)
+
 
 def oauth_login_url(preserve_path=True, next_url=None):
     fb_login_uri = ("https://www.facebook.com/dialog/oauth"
@@ -159,59 +173,61 @@ def get_token():
 
         return token
 
+paths_dict = {"CSS_PATH":"static/css/", "JS_PATH":"static/js/", "IMG_PATH":"static/img/", "MOV_PATH":"static/mov/"}
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    # print get_home()
-
-
-    access_token = get_token()
-    channel_url = url_for('get_channel', _external=True)
-    channel_url = channel_url.replace('http:', '').replace('https:', '')
-
-    if access_token:
-
-        me = fb_call('me', args={'access_token': access_token})
-        fb_app = fb_call(FB_APP_ID, args={'access_token': access_token})
-        likes = fb_call('me/likes',
-                        args={'access_token': access_token, 'limit': 4})
-        friends = fb_call('me/friends',
-                          args={'access_token': access_token, 'limit': 4})
-        photos = fb_call('me/photos',
-                         args={'access_token': access_token, 'limit': 16})
-
-        redir = get_home() + 'close/'
-        POST_TO_WALL = ("https://www.facebook.com/dialog/feed?redirect_uri=%s&"
-                        "display=popup&app_id=%s" % (redir, FB_APP_ID))
-
-        app_friends = fql(
-            "SELECT uid, name, is_app_user, pic_square "
-            "FROM user "
-            "WHERE uid IN (SELECT uid2 FROM friend WHERE uid1 = me()) AND "
-            "  is_app_user = 1", access_token)
-
-        SEND_TO = ('https://www.facebook.com/dialog/send?'
-                   'redirect_uri=%s&display=popup&app_id=%s&link=%s'
-                   % (redir, FB_APP_ID, get_home()))
-
-        url = request.url
-
-        return render_template(
-            'index.html', app_id=FB_APP_ID, token=access_token, likes=likes,
-            friends=friends, photos=photos, app_friends=app_friends, app=fb_app,
-            me=me, POST_TO_WALL=POST_TO_WALL, SEND_TO=SEND_TO, url=url,
-            channel_url=channel_url, name=FB_APP_NAME)
+    if request.method == 'GET':
+	   return render_template("teaser.html",**paths_dict)
     else:
-        return render_template('login.html', app_id=FB_APP_ID, token=access_token, url=request.url, channel_url=channel_url, name=FB_APP_NAME)
+        name = request.form["field-name"]
+        age = request.form["field-age"]
+        locale = request.form["field-locale"]
+        city = "Rio de Janeiro"
+        country = "Brazil"
+        location = "GPS"
+        gender = request.form["field-gender"]
+        rating = 0.00
+        fbid = request.form["field-fbid"]
 
-@app.route('/channel.html', methods=['GET', 'POST'])
-def get_channel():
-    return render_template('channel.html')
+        cur = conn.cursor();
+        sql_user = "INSERT INTO users(name,age,city,country,location,gender,fbid,rating) VALUES (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', %s) RETURNING id" % (name,age,city,country,location,gender,fbid,rating)
+
+        question = request.form["field-question"]
+        keywords = ""
+
+        sql_activity = "INSERT INTO activities(name,keywords) VALUES(\'%s\',\'%s\') RETURNING id" % (question,keywords)
+
+        request_type = request.form["field-request-type"]
+        status = "A" #Available,Waiting,Finished
+        
+        cur.execute(sql_user)
+        user_id = cur.fetchone()[0]
 
 
-@app.route('/close/', methods=['GET', 'POST'])
-def close():
-    return render_template('close.html')
+        try:
+            cur.execute(sql_activity)
+            activity_id = cur.fetchone()[0]
+
+            sql_request = "INSERT INTO requests(activity_id,type,user_id,status) VALUES(%d,\'%s\',%d,\'%s\') RETURNING id" %(activity_id,request_type,user_id,status)
+            cur.execute(sql_request)
+
+            conn.commit()
+
+            return "OK"
+        except:
+            return "ERRO"
+        finally:
+            cur.close()
+            conn.close()
+
+
+
+@app.route('/blog', methods=['GET'])
+def blog():
+    return render_template("blog.html",CSS_PATH="static/css/", JS_PATH="static/js/", IMG_PATH="static/img/", MOV_PATH="static/mov/")
+
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))

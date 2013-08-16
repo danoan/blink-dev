@@ -1,25 +1,172 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
 
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width; initial-scale=1.0">
-		<link rel="stylesheet" href="../css/normalize.css"></link>
- 		<link rel="stylesheet" href="../css/mygs-fluid.css"></link> 
-		<link rel="stylesheet" href="../css/teaser.css"></link>
-		<link rel="stylesheet" href="../css/bootstrap.css"></link>
-		<script src="../js/jquery-1.8.2.min.js"></script>
+		<link rel="stylesheet" href="{{CSS_PATH}}normalize.css"></link>
+ 		<link rel="stylesheet" href="{{CSS_PATH}}mygs-fluid.css"></link> 
+		<link rel="stylesheet" href="{{CSS_PATH}}teaser.css"></link>
+		<link rel="stylesheet" href="{{CSS_PATH}}bootstrap.css"></link>
+
+		<script src="{{JS_PATH}}jquery-1.8.2.min.js"></script>
+
+		<script type="text/javascript">
+
+			function SuggestionsPanel(divPanel){
+				var suggestions = ["Dançar Salsa","Manobras de Skate","Dicas para um mochilão na Europa","Posições de Ioga","Desenhar o Sr. Incrível","A importância da luz na fotografia","História da 2a Guerra Mundial","Programação em Python","Curiosidades sobre raças de cachorros"];				
+
+				var current = document.createElement("span");
+				var other = document.createElement("span");
+				var curs = 0;
+
+				$(current).attr("style","display:none");
+				$(other).attr("style","display:none");
+
+				divPanel.append(current);
+				divPanel.append(other);
+
+				var toggle_current = function(){
+					var temp = current;
+					current = other;
+					other = temp;
+				}
+
+				var myint;
+
+				this.start =function(){
+					myint = setInterval(function(){
+						$(current).fadeOut(function(){
+							toggle_current();
+							$(other).fadeOut();
+
+							$(current).html(function(){
+									return suggestions[curs++%suggestions.length];
+							}()).fadeIn();						
+							
+						});
+
+					},2500);	
+				}
+
+				this.stop = function(){
+					clearInterval(myint);
+					$(current).attr("style","display:none");
+					$(other).attr("style","display:none");					
+				}			
+
+				this.start();
+			}
+
+
+
+			$(document).ready(function(){
+
+				var sp = new SuggestionsPanel($(".suggestions-container"));
+
+				$(window).keydown(function(event){
+					if(event.keyCode == 13) {
+						event.preventDefault();
+						return false;
+					}				
+				});
+
+				var login = function login(){
+					FB.login(function(response){
+						if(response.authResponse){
+							console.log("Logado");
+							afterLogin();
+						}else{
+							console.log("Erro");
+						}
+					});			
+				}
+
+				var afterLogin = function(response){
+					FB.api('/me?fields=name,age_range,locale,gender,id',function(response){		
+
+						var formData = {
+							"field-name": response.name,
+							"field-age": response.age_range.min,
+							"field-locale": response.locale,
+							"field-gender": response.gender,
+							"field-fbid": response.id,
+							"field-question":$("#field-question").val(),
+							"field-request-type": 1
+						};
+
+						$.ajax({
+							type:"POST",
+							url:"",
+							data: formData,
+							dataType:"text",
+							success:function(r){
+								console.log("sucesso",r);
+							},
+							error:function(r){
+								console.log("erro",r);
+							}
+						})
+
+					});
+				}
+
+				$("#field-question").keydown(function(e){
+					if(e.keyCode==13){
+						login();
+					}
+				});	
+
+				$("#field-question").focus(sp.stop);
+				$("#field-question").blur(function(){
+					if($("#field-question").val().trim().length==0){
+						sp.start();
+					}
+				});
+
+				$(".suggestions-container span").click(function(){
+					$("#field-question").focus();
+				});
+
+				$(".btn").click(function(){login();});
+			});
+			
+		</script>
 
 	</head>
 
 	<body>
+		<div id="fb-root"></div>
+			<script>
+			  window.fbAsyncInit = function() {
+			    // init the FB JS SDK
+			    FB.init({
+			      appId      : '507371419342913',
+			      channelUrl : '//localhost:5000', 
+			      status     : true,               
+			      xfbml      : true          
+			    });
+
+			    // Additional initialization code such as adding Event Listeners goes here
+			  };
+
+			  // Load the SDK asynchronously
+			  (function(d, s, id){
+			     var js, fjs = d.getElementsByTagName(s)[0];
+			     if (d.getElementById(id)) {return;}
+			     js = d.createElement(s); js.id = id;
+			     js.src = "//connect.facebook.net/en_US/all.js";
+			     fjs.parentNode.insertBefore(js, fjs);
+			   }(document, 'script', 'facebook-jssdk'));
+			</script>		
+		</div>
+
 		<div class="all">
 
 			<div class="row block-content-format zero-block-content">
 				<div class="col6">
 					<div class="teaser-image">
-						<img src="../img/blink-logo-spotlight-yellow.png" width="100%" />
+						<img src="{{IMG_PATH}}blink-logo-spotlight-yellow.png" width="100%" />
 					</div>					
 				</div>
 			
@@ -33,11 +180,18 @@
 
 			<div class="row block-content-format zero-block-content">			
 				<div class="col12 field-container">
-					<label>O que você pode ensinar?</label>
-					<input type="text" name="field-question" id="field-question" />
+					<label>Qual atividade você pode compartilhar?</label>
+					<input type="text" name="field-question" id="field-question" />			
 				</div>
-			</div>
 
+				<div class="suggestions-container">
+				</div>									
+
+				<div class="button-container">
+					<button class="btn btn-info btn-large">Vamos nessa!</button>
+				</div>					
+
+			</div>
 	</body>
 
 </html>
