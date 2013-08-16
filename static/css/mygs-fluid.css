@@ -1,6 +1,6 @@
 .row {
   width: 100%;
-  margin-left: 0px !important; }
+  /*margin-left:0px !important;*/ }
 
 @media screen and (min-width: 1260px) {
   /*.row{ width: $screenWidth+0px; }*/

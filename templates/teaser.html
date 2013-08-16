@@ -85,14 +85,23 @@
 					$(other).attr("style","display:none");					
 				}			
 
-				this.start();
+				this.adjust = function(){
+					var newW = $(".field-container input").width();
+					$(".suggestions-container").width( newW );					
+					$(".suggestions-container").css( "margin-left", -newW/2 );	
+				}
+
+				this.adjust();
+				this.start();				
 			}
 
 
 
 			$(document).ready(function(){
 
-				var sp = new SuggestionsPanel($(".suggestions-container"));
+				var sp1 = new SuggestionsPanel($(".fluid .suggestions-container"));
+				var sp2 = new SuggestionsPanel($(".stacked .suggestions-container"));
+
 				var to = new TestObject();
 				var debug = false;
 
@@ -171,10 +180,10 @@
 					});					
 				});	
 
-				$("#field-question").focus(sp.stop);
+				$("#field-question").focus(function(){sp1.stop();sp2.stop();});
 				$("#field-question").blur(function(){
 					if($("#field-question").val().trim().length==0){
-						sp.start();
+						sp1.start();sp2.start();
 					}
 				});
 
@@ -182,6 +191,9 @@
 					$("#field-question").focus();
 				});
 
+				$("#field-question").resize(function(){
+					sp1.adjust();sp2.adjust();
+				})
 				
 			});
 			
@@ -227,20 +239,42 @@
 				<div class="col6">
 					<div class="teaser-container">
 						<h1>Alguém te contou um segredo</h1>
-						<span>Blink é a mais nova maneira de fazer amigos e aprender coisas novas. Você é um dos primeiros a saber dessa novidade e poderá ser um dos primeiros Blinkers da nossa comunidade, basta responder a pergunta abaixo e adicionar o nosso aplicativo do Facebook.</span>
+						<span>Blink é a mais nova maneira de fazer amigos e aprender coisas novas. Você é um dos primeiros a saber dessa novidade e poderá ser um dos primeiros Blinkers da nossa comunidadeut, basta responder a pergunta abaixo e adicionar o nosso aplicativo do Facebook.</span>
 					</div>
 				</div>
 			</div>
+
+			<style>
+				.suggestions-wrapper{
+					position:absolute;
+					left:50%;
+				}
+
+				.wrapper-input{
+					position: relative;
+				}
+			</style>
 
 			<div class="row block-content-format zero-block-content">			
 				<div class="field-container">
 					<div class="col12">
 						<label>Qual atividade você pode compartilhar?</label>
-						<input type="text" name="field-question" id="field-question" />			
-					</div>
+						
+						<div class="wrapper-input">
+							<div class="suggestions-wrapper fluid">
+								<div class="suggestions-container">
+								</div>						
+							</div>		
 
-					<div class="suggestions-container">
-					</div>									
+							<input type="text" name="field-question" id="field-question" />				
+						</div>						
+
+						<div class="suggestions-wrapper stacked">
+							<div class="suggestions-container">
+							</div>						
+						</div>								
+
+					</div>		
 
 					<div class="button-container">
 						<button class="btn btn-info btn-large">Vamos nessa!</button>
