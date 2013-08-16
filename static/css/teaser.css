@@ -53,7 +53,7 @@ body {
 .suggestions-container {
   position: absolute;
   margin-top: 40px;
-  margin-left: 20px; }
+  margin-left: 5px; }
   .suggestions-container span {
     color: #BBB;
     font-size: 19px; }
@@ -144,7 +144,7 @@ body {
   .suggestions-container {
     margin-top: -37px; }
     .suggestions-container span {
-      font-size: 13px; }
+      font-size: 12px; }
 
   .button-container button {
     width: 200px;

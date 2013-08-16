@@ -13,6 +13,36 @@
 
 		<script type="text/javascript">
 
+			function TestObject(stage){
+				var stage = 1;
+
+				this.run = function(){	
+					if(stage==0){
+						$(".field-container").show();
+						$(".loading-container").hide();
+						$(".thanks-container").hide();
+					}else if(stage==1){
+						$(".field-container").hide();
+						$(".loading-container").show();				
+					}else if(stage==2){
+						$(".loading-container").fadeOut(function(){
+							$(".try-again-container").fadeIn();	
+						});						
+					}else if(stage==3){
+						$("#btn-try-again").click();	
+					}else if(stage==4){
+						$(".field-container").hide();
+						$(".loading-container").show();					
+					}else if(stage==5){
+						$(".loading-container").fadeOut(function(){
+							$(".thanks-container").fadeIn();	
+						});						
+					}
+					stage = (stage+1)%6;
+				};
+
+			}
+
 			function SuggestionsPanel(divPanel){
 				var suggestions = ["Dançar Salsa","Manobras de Skate","Dicas para um mochilão na Europa","Posições de Ioga","Desenhar o Sr. Incrível","A importância da luz na fotografia","História da 2a Guerra Mundial","Programação em Python","Curiosidades sobre raças de cachorros"];				
 
@@ -63,11 +93,16 @@
 			$(document).ready(function(){
 
 				var sp = new SuggestionsPanel($(".suggestions-container"));
+				var to = new TestObject();
+				var debug = false;
 
 				$(window).keydown(function(event){
+					// console.log(event.keyCode);
 					if(event.keyCode == 13) {
 						event.preventDefault();
 						return false;
+					}else if(event.keyCode == 39 ){ //LEFT
+						if(debug) to.run();
 					}				
 				});
 
