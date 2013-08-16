@@ -72,6 +72,9 @@
 				});
 
 				var login = function login(){
+					$(".field-container").hide();
+					$(".loading-container").show();
+
 					FB.login(function(response){
 						if(response.authResponse){
 							console.log("Logado");
@@ -101,10 +104,18 @@
 							data: formData,
 							dataType:"text",
 							success:function(r){
-								console.log("sucesso",r);
+								// console.log("sucesso",r);
+								$(".loading-container").fadeOut(function(){
+									$(".thanks-container").fadeIn();	
+								});
+								
 							},
 							error:function(r){
-								console.log("erro",r);
+								// console.log("erro",r);
+								$(".loading-container").fadeOut(function(){
+									$(".try-again-container").fadeIn();	
+								});
+								
 							}
 						})
 
@@ -115,6 +126,14 @@
 					if(e.keyCode==13){
 						login();
 					}
+				});	
+
+				$(".button-container button").click(function(){login();});		
+				
+				$("#btn-try-again").click(function(){
+					$(".try-again-container").fadeOut(function(){
+						$(".field-container").fadeIn();	
+					});					
 				});	
 
 				$("#field-question").focus(sp.stop);
@@ -128,7 +147,7 @@
 					$("#field-question").focus();
 				});
 
-				$(".btn").click(function(){login();});
+				
 			});
 			
 		</script>
@@ -179,17 +198,35 @@
 			</div>
 
 			<div class="row block-content-format zero-block-content">			
-				<div class="col12 field-container">
-					<label>Qual atividade você pode compartilhar?</label>
-					<input type="text" name="field-question" id="field-question" />			
+				<div class="field-container">
+					<div class="col12">
+						<label>Qual atividade você pode compartilhar?</label>
+						<input type="text" name="field-question" id="field-question" />			
+					</div>
+
+					<div class="suggestions-container">
+					</div>									
+
+					<div class="button-container">
+						<button class="btn btn-info btn-large">Vamos nessa!</button>
+					</div>					
 				</div>
 
-				<div class="suggestions-container">
-				</div>									
+				<div class="loading-container">
+					<p>Processando...</p>
+				</div>
 
-				<div class="button-container">
-					<button class="btn btn-info btn-large">Vamos nessa!</button>
-				</div>					
+				<div class="thanks-container">
+					<p>Parabéns! Você é o mais novo blinker do pedaço</p>
+					<p><span>Curta a página no Facebook e fique ligado nas novidades. Happy Blinking!<span></p>
+
+					<div class="fb-like" data-href="https://www.facebook.com/pages/Que-tal-um-Blink/453539941409736" data-width="450" data-layout="button_count" data-show-faces="true" data-send="false"></div>					
+				</div>
+
+				<div class="try-again-container">				
+					<p>Desculpa, não conseguimos receber a sua proposta de blink. Vamos tentar de novo?!</p>
+					<button id="btn-try-again" class="btn btn-info btn-large">Agora vai!</button>
+				</div>
 
 			</div>
 	</body>

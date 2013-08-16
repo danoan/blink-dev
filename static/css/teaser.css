@@ -27,10 +27,15 @@ body {
     line-height: 1.64em;
     font-size: 17px; }
   .block-content-format a {
-    font-family: "Verdana" sans-serif;
+    font-family: "Calibri", "Verdana" sans-serif;
     font-size: 14px;
     color: #FFF;
     cursor: pointer; }
+  .block-content-format p {
+    text-align: center;
+    font-family: "Calibri","Verdana" sans-serif;
+    font-size: 18px;
+    color: #0470bf; }
   .block-content-format label {
     color: #0470bf;
     font-family: "Calibri","Verdana" sans-serif;
@@ -52,6 +57,26 @@ body {
   .suggestions-container span {
     color: #BBB;
     font-size: 19px; }
+
+.thanks-container {
+  display: none; }
+  .thanks-container span {
+    text-align: center; }
+  .thanks-container .fb-like {
+    width: 100%;
+    text-align: center; }
+
+.loading-container {
+  display: none; }
+
+.try-again-container {
+  display: none; }
+  .try-again-container button {
+    width: 180px;
+    left: 50%;
+    margin-left: -90px;
+    position: relative;
+    margin-top: 0.32em; }
 
 .button-container button {
   width: 300px;

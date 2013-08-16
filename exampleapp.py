@@ -22,17 +22,17 @@ FB_APP_SECRET = os.environ.get('FACEBOOK_SECRET')
 import psycopg2
 import urlparse
 
-urlparse.uses_netloc.append("postgres")
-url = urlparse.urlparse(os.environ["DATABASE_URL"])
+def connect_database():
+    urlparse.uses_netloc.append("postgres")
+    url = urlparse.urlparse(os.environ["DATABASE_URL"])
 
-conn = psycopg2.connect(
-    database=url.path[1:],
-    user=url.username,
-    password=url.password,
-    host=url.hostname,
-    port=url.port
-)
-
+    return psycopg2.connect(
+        database=url.path[1:],
+        user=url.username,
+        password=url.password,
+        host=url.hostname,
+        port=url.port
+    )    
 
 def oauth_login_url(preserve_path=True, next_url=None):
     fb_login_uri = ("https://www.facebook.com/dialog/oauth"
@@ -191,6 +191,7 @@ def index():
         rating = 0.00
         fbid = request.form["field-fbid"]
 
+        conn = connect_database()
         cur = conn.cursor();
         sql_user = "INSERT INTO users(name,age,city,country,location,gender,fbid,rating) VALUES (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', %s) RETURNING id" % (name,age,city,country,location,gender,fbid,rating)
 
