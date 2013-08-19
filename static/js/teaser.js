@@ -1,3 +1,38 @@
+function teaser_init(suggestions){
+	var ip = new InteractionPanel(suggestions);
+
+	var to = new TestObject(ip);
+	var debug = false;
+
+	$(window).keydown(function(event){
+		// console.log(event.keyCode);
+		if(event.keyCode == 13) {
+			event.preventDefault();
+			return false;
+		}else if(event.keyCode == 39 ){ //LEFT
+			if(debug) to.run();
+		}				
+	});
+
+
+	$("#field-question").keydown(function(e){
+		if(e.keyCode==13){
+			ip.login();
+		}
+	});	
+
+	$(".button-container button").click(function(){ip.login();});		
+	$("#btn-try-again").click(function(){ip.fn_share();});	
+
+	$("#field-question").focus(function(){ip.fn_focus()});
+	$("#field-question").blur(function(){ip.fn_blur()});
+	$("#field-question").resize(function(){ip.fn_resize();});	
+
+	$(".suggestions-container").click(function(){
+		$("#field-question").focus();
+	});
+}
+
 function TestObject(ip){
 	var stage = 1;
 
@@ -70,9 +105,7 @@ function SuggestionsPanel(divPanel,suggestions){
 	this.start();				
 }
 
-function InteractionPanel(){
-	var suggestions = ["Dançar Salsa","Manobras de Skate","Dicas para um mochilão na Europa","Posições de Ioga","Desenhar o Sr. Incrível","A importância da luz na fotografia","História da 2a Guerra Mundial","Programação em Python","Curiosidades sobre raças de cachorros"];
-
+function InteractionPanel(suggestions){
 	var sp1 = new SuggestionsPanel($(".fluid .suggestions-container"),suggestions);
 	var sp2 = new SuggestionsPanel($(".stacked .suggestions-container"),suggestions);
 
@@ -86,37 +119,42 @@ function InteractionPanel(){
 		$("#question-label-2").css("display","block");
 	}
 
+	var that = this;
+
 	var _login = function login(){
 		if($("#field-question").val().trim().length==0){
 			$(".control-group").addClass("error");
-			setTimeout(function(){console.log("OI");$(".control-group").removeClass("error");},750);
+			setTimeout(function(){$(".control-group").removeClass("error");},750);
 			return;
 		}
 
 		$(".control-group").removeClass("error");
-		fn_processing();
+		this.fn_processing();
 
 		FB.login(function(response){
 			if(response.authResponse){
 				afterLogin();
 			}else{
-				fn_error(response);
+				this.fn_error(response);
 			}
-		});			
+		},{scope:"user_birthday,user_location"});			
 	}
 
 	var afterLogin = function(response){
-		FB.api('/me?fields=name,age_range,locale,gender,id',function(response){		
-
+		FB.api('/me?fields=name,age_range,locale,gender,id,location,birthday',function(response){		
+			console.log(response);
 			var formData = {
 				"field-name": response.name,
-				"field-age": response.age_range.min,
+				"field-birthday": response.birthday,
 				"field-locale": response.locale,
+				"field-location": response.location.name,
 				"field-gender": response.gender,
 				"field-fbid": response.id,
 				"field-question":$("#field-question").val(),
 				"field-request-type": input_type
 			};
+
+			// console.log(formData);
 
 			$.ajax({
 				type:"POST",
@@ -124,10 +162,10 @@ function InteractionPanel(){
 				data: formData,
 				dataType:"text",
 				success:function(r){
-					fn_success(r);					
+					that.fn_success(r);					
 				},
 				error:function(r){
-					fn_error(r);				
+					that.fn_error(r);				
 				}
 			})
 
@@ -137,6 +175,7 @@ function InteractionPanel(){
 	this.login = _login;
 
 	this.fn_error = function(r){
+		console.log(r);
 		cur_container.fadeOut(function(){
 			cur_container = $(".try-again-container");
 			cur_container.fadeIn();
@@ -151,9 +190,10 @@ function InteractionPanel(){
 	}
 
 	this.fn_success = function(r){
-			cur_container.fadeOut(function(){
-			cur_container = $(".thanks-container");
-			cur_container.fadeIn();
+		console.log(r);
+		cur_container.fadeOut(function(){
+		cur_container = $(".thanks-container");
+		cur_container.fadeIn();
 		});	
 	}
 

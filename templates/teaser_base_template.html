@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="{% block lang %}{% endblock %}">
 <head>
 {% block head %}
 	<meta charset="utf-8" />
@@ -7,11 +8,23 @@
 	<link rel="stylesheet" href="{{CSS_PATH}}normalize.css"></link>
 		<link rel="stylesheet" href="{{CSS_PATH}}mygs-fluid.css"></link> 
 	<link rel="stylesheet" href="{{CSS_PATH}}bootstrap.css"></link>
-
-
 	<link rel="stylesheet" href="{{CSS_PATH}}teaser.css"></link>
+
 	<script src="{{JS_PATH}}teaser.js"></script>
-	<script src="{{JS_PATH}}jquery-1.8.2.min.js"></script>
+	<script src="{{JS_PATH}}jquery-1.8.2.min.js"></script>	
+
+	<script>
+		$(document).ready(function(){	
+		{% if portuguese %}
+		var suggestions = ["Dançar Salsa","Manobras de Skate","Dicas para um mochilão na Europa","Posições de Ioga","Desenhar o Sr. Incrível","A importância da luz na fotografia","História da 2a Guerra Mundial","Programação em Python","Curiosidades sobre raças de cachorros"];
+		{% else %}
+		var suggestions = ["Dance Salsa","Skate Tricks","Hints for a backpack on Europe","Yoga Poses","How to draw Mr. Incredible","The importance of light on Photograph","Second World War History","Python Programming","Dog breeds characteristics"];
+		{% endif %}
+
+			teaser_init(suggestions);
+		});
+	</script>
+
 {% endblock head %}
 </head>
 <body>
@@ -19,12 +32,14 @@
 	<div id="fb-root"></div>
 		<script>
 		  // 507371419342913
+		  // 1408547952691251
 		  // localhost:5000
+		  //blink-app.herokuapp.com/
 		  window.fbAsyncInit = function() {
 		    // init the FB JS SDK
 		    FB.init({
-		      appId      : '1408547952691251',
-		      channelUrl : '//blink-app.herokuapp.com/', 
+		      appId      : '507371419342913',
+		      channelUrl : '//localhost:5000', 
 		      status     : true,               
 		      xfbml      : true          
 		    });
@@ -84,7 +99,7 @@
 				</div>		
 
 				<div class="button-container">
-					<button class="btn btn-info btn-large">Vamos nessa!</button>
+					<button class="btn btn-info btn-large">{% block lets_go %}{% endblock %}</button>
 				</div>					
 			</div>
 
