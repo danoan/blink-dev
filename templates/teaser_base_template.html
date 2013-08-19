@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<head>
+{% block head %}
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width; initial-scale=1.0">
+
+	<link rel="stylesheet" href="{{CSS_PATH}}normalize.css"></link>
+		<link rel="stylesheet" href="{{CSS_PATH}}mygs-fluid.css"></link> 
+	<link rel="stylesheet" href="{{CSS_PATH}}bootstrap.css"></link>
+
+
+	<link rel="stylesheet" href="{{CSS_PATH}}teaser.css"></link>
+	<script src="{{JS_PATH}}teaser.js"></script>
+	<script src="{{JS_PATH}}jquery-1.8.2.min.js"></script>
+{% endblock head %}
+</head>
+<body>
+	{% block body %}
+	<div id="fb-root"></div>
+		<script>
+		  // 507371419342913
+		  // localhost:5000
+		  window.fbAsyncInit = function() {
+		    // init the FB JS SDK
+		    FB.init({
+		      appId      : '1408547952691251',
+		      channelUrl : '//blink-app.herokuapp.com/', 
+		      status     : true,               
+		      xfbml      : true          
+		    });
+
+		    // Additional initialization code such as adding Event Listeners goes here
+		  };
+
+		  // Load the SDK asynchronously
+		  (function(d, s, id){
+		     var js, fjs = d.getElementsByTagName(s)[0];
+		     if (d.getElementById(id)) {return;}
+		     js = d.createElement(s); js.id = id;
+		     js.src = "//connect.facebook.net/en_US/all.js";
+		     fjs.parentNode.insertBefore(js, fjs);
+		   }(document, 'script', 'facebook-jssdk'));
+		</script>		
+	</div>
+
+	<div class="all">
+
+		<div class="row block-content-format zero-block-content">
+			<div class="col6">
+				<div class="teaser-image">
+					<img src="{{IMG_PATH}}blink-logo-spotlight-yellow.png" width="100%" />
+				</div>					
+			</div>
+		
+			<div class="col6">
+				<div class="teaser-container">
+					{% block main_text %}
+
+					{% endblock main_text %}
+				</div>
+			</div>
+		</div>
+
+		<div class="row block-content-format zero-block-content">			
+			<div class="field-container">
+				<div class="col12">
+					{% block questions %}		
+					{% endblock questions %}		
+					
+					<div class="control-group wrapper-input">
+						<div class="suggestions-wrapper fluid">
+							<div class="suggestions-container">
+							</div>						
+						</div>		
+
+						<input type="text" name="field-question" id="field-question" />				
+					</div>						
+
+					<div class="suggestions-wrapper stacked">
+						<div class="suggestions-container">
+						</div>						
+					</div>								
+
+				</div>		
+
+				<div class="button-container">
+					<button class="btn btn-info btn-large">Vamos nessa!</button>
+				</div>					
+			</div>
+
+			<div class="loading-container">
+				{% block processing_text %}					
+				{% endblock processing_text %}
+			</div>
+
+			<div class="thanks-container">
+				{% block thanks_text %}
+				{% endblock thanks_text %}
+			</div>
+
+			<div class="try-again-container">
+				{% block try_again_text %}				
+				{% endblock try_again_text %}
+			</div>
+
+		</div>
+	{% endblock body %}		
+</body>
+</html>
