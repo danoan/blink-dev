@@ -145,7 +145,7 @@ function ValidationPanel(){
 			panel.show();
 			curPanel = panel;
 		}else{
-			showPanel(panel,fade)
+			showPanel(panel,fade,afterFade_fn)
 		}
 	}
 
