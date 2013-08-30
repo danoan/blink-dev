@@ -6,12 +6,13 @@
 	<meta name="viewport" content="width=device-width; initial-scale=1.0">
 
 	<link rel="stylesheet" href="{{CSS_PATH}}normalize.css"></link>
-		<link rel="stylesheet" href="{{CSS_PATH}}mygs-fluid.css"></link> 
+	<link rel="stylesheet" href="{{CSS_PATH}}mygs-fluid.css"></link> 
 	<link rel="stylesheet" href="{{CSS_PATH}}bootstrap.css"></link>
 	<link rel="stylesheet" href="{{CSS_PATH}}teaser.css"></link>
 
 	<script src="{{JS_PATH}}teaser.js"></script>
 	<script src="{{JS_PATH}}jquery-1.8.2.min.js"></script>	
+	<script src="{{JS_PATH}}bootstrap.js"></script>	
 
 	<script>
 		$(document).ready(function(){	
@@ -39,7 +40,7 @@
 		    // init the FB JS SDK
 		    FB.init({
 		      appId      : '1408547952691251',
-		      channelUrl : '//blink-app.herokuapp.com', 
+		      channelUrl : '//blink-app.herokuapp.com/', 
 		      status     : true,               
 		      xfbml      : true          
 		    });
@@ -60,20 +61,50 @@
 
 	<div class="all">
 
-		<div class="row block-content-format zero-block-content">
-			<div class="col6">
-				<div class="teaser-image">
-					<img src="{{IMG_PATH}}blink-logo-spotlight-yellow.png" width="100%" />
-				</div>					
+		<div class="tab-code-container">
+			<div class="tab-code">
+				{% block tab_code %}
+				{% endblock %}
 			</div>
-		
-			<div class="col6">
-				<div class="teaser-container">
-					{% block main_text %}
+		</div>
 
-					{% endblock main_text %}
+		<div id="myModal" class="modal hide fade" style="width:360px;margin-left:-180px;">
+
+			<div class="modal-body">
+				<div class="modal-body-enter-container">
+					{% block modal_code %}
+					{% endblock modal_code %}
+				</div>		
+			</div>
+
+		</div>
+
+		<div class="row block-content-format zero-block-content">
+
+			<div class="container-initial">
+				<div class="col6">
+					<div class="teaser-image">
+						<img src="{{IMG_PATH}}blink-logo-spotlight-yellow.png" width="100%" />
+					</div>					
+				</div>
+			
+				<div class="col6">
+					<div class="teaser-container">
+						{% block main_text %}
+
+						{% endblock main_text %}
+					</div>
+
 				</div>
 			</div>
+
+			<div class="container-inter-blinker">
+				<div class="col12">
+					{% block inter_blinker %}
+					{% endblock inter_blinker %}
+				</div>
+			</div>
+
 		</div>
 
 		<div class="row block-content-format zero-block-content">			

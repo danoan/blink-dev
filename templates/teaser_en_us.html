@@ -6,8 +6,6 @@
 	{{ super() }}
 {% endblock head %}
 
-
-
 {% block main_text %}
 	<h1>Someone told you a secret</h1>
 	<span>Blink is the new way to make friends and learn new things. You belong to a really small selected group that knows about it and could be among the firsts Blinkers of our community. You just have to answer the question below and add our Facebook App.</span>
@@ -44,8 +42,31 @@
 {% endblock thanks_text %}
 
 
+{% block tab_code %}
+	I have the <br /> special code
+{% endblock tab_code %}
 
 {% block try_again_text %}
 	<p>Sorry, we were not able to receive your amazing blink purpose. Can we try it again?!</p>
 	<button id="btn-try-again" class="btn btn-info btn-large">Try it again!</button>
 {% endblock try_again_text %}
+
+
+{% block modal_code %}
+	<h1>Enter the code</h1>				
+	<input type="text" name="field-code" id="field-code" />				
+	<p class="invalid-code">The code is not valid.</p>
+	<p class="used-code">This code is in use.</p>		
+	<p class="error-code">An unexpected error occurred. Let's try again?!</p>		
+	<p class="valid-code">Code accepted!</p>
+	<p class="loading-container">Verifying...</p>						
+{% endblock modal_code %}
+
+{% block inter_blinker %}
+
+	<h1>You were choosen to be an International Blinker!</h1>
+
+	<span>Being a Blinker is already special, and being an International Blinker is even better. You were  recommended because you are intelligent, reliable and enjoy to make new friends. As an International Blinker you will have the opportunity to strength your language skills and get along with people all around the world. In order to accept to be an International Blinker you should answer the question below. Happy Bllinking!
+	</span>
+
+{% endblock inter_blinker %}

@@ -6,11 +6,15 @@
 	{{ super() }}
 {% endblock head %}
 
+{% block body %}
 
+	{{super()}}
+
+{% endblock %}
 
 {% block main_text %}
 	<h1>Alguém te contou um segredo</h1>
-	<span>Blink é a mais nova maneira de fazer amigos e aprender coisas novas. Você é um dos primeiros a saber dessa novidade e poderá ser um dos primeiros Blinkers da nossa comunidade, basta responder a pergunta abaixo e adicionar o nosso aplicativo do Facebook.</span>
+	<span>Blink é a mais nova maneira de fazer amigos e descobrir coisas novas. Você é um dos primeiros a saber dessa novidade e poderá ser um dos primeiros Blinkers da nossa comunidade, basta responder a pergunta abaixo e adicionar o nosso aplicativo do Facebook.</span>
 {% endblock main_text %}
 
 {% block lets_go %}
@@ -42,9 +46,30 @@
 	<div class="fb-like" data-href="https://www.facebook.com/pages/Que-tal-um-Blink/453539941409736" data-width="450" data-layout="button_count" data-show-faces="true" data-send="false"></div>					
 {% endblock thanks_text %}
 
-
+{% block tab_code %}
+	Eu tenho o <br /> código especial
+{% endblock tab_code %}
 
 {% block try_again_text %}
 	<p>Desculpa, não conseguimos receber a sua proposta de blink. Vamos tentar de novo?!</p>
 	<button id="btn-try-again" class="btn btn-info btn-large">Agora vai!</button>
 {% endblock try_again_text %}
+
+{% block modal_code %}
+	<h1>Entre com o código</h1>				
+	<input type="text" name="field-code" id="field-code" />				
+	<p class="invalid-code">Codigo Invalido</p>
+	<p class="used-code">O código já foi usado</p>		
+	<p class="error-code">Um erro inesperado ocorreu. Vamos tentar de novo?!</p>		
+	<p class="valid-code">Codigo Verificado!</p>
+	<p class="loading-container">Verificando...</p>						
+{% endblock modal_code %}
+
+{% block inter_blinker %}
+
+	<h1>Você foi escolhido para ser um Blinker Internacional!</h1>
+
+	<span>Ser um Blinker já é especial, e ser um Blinker internacional é ainda melhor. Você foi indicado por ser uma pessoa inteligente, confiável e que curte fazer novos amigos. Sendo um Blinker Internacional você terá a oportunidade de melhorar ainda mais a sua língua estrangeira e fazer amigos ao redor do mundo quando estes estiverem visitando a sua cidade. Para aceitar ser um Blinker Internacional, basta responder a pergunta abaixo. Happy Bllinking!
+	</span>
+
+{% endblock inter_blinker %}
