@@ -2,11 +2,14 @@
 
 import os
 from flask import Flask, session, request, redirect, render_template, url_for
-
+from flaskext.mysql import MySQL
+	
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_object('conf.Config')
 
+mysql = MySQL()
+mysql.init_app(app)
 
 @app.route('/')
 def hello():
@@ -28,3 +31,13 @@ def social_panel(call_id):
 	
 	return render_template('social_panel_template.html',**template_vars)
 
+@app.route('/db')
+def db():
+	cursor = mysql.get_db().cursor()
+	query = ("SELECT * FROM tb_bairro limit 10;")
+	cursor.execute(query)
+	print(cursor);	
+	for (id_bairro, no_bairro, fl_ativo) in cursor:
+  		print(id_bairro, fl_ativo)
+	cursor.close()
+	return "PORRA"
