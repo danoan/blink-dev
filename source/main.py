@@ -35,8 +35,7 @@ def social_panel(call_id):
 def db():
 	cursor = mysql.get_db().cursor()
 	query = ("SELECT * FROM tb_bairro limit 10;")
-	cursor.execute(query)
-	print(cursor);	
+	cursor.execute(query)	
 	for (id_bairro, no_bairro, fl_ativo) in cursor:
   		print(id_bairro, fl_ativo)
 	cursor.close()
