@@ -42,7 +42,7 @@ def call_object(call_id):
 
 
 @app.route('/social_panel/<call_id>')
-def social_panel(call_id):
+def sociil_panel(call_id):
 	call_object_id = "http://blink-app.heroku/blog"
 	template_vars = {"data":data, "call_id":call_id,"call_object_id":call_object_id,"category":u"Iluminação","state":"Aguardando"}	
 	
