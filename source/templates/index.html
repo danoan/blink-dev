@@ -24,7 +24,7 @@
 		.content{width: 1280px; margin:0 auto;}
 	
 		#call-list{
-			height: 200px;
+			height: 150px;
 		}
 
 		#social-panel-container{
@@ -130,11 +130,11 @@
 			background-color: gray;
 		}
 
-		.state-happening{
-			background-color: yellow;
+		.state-delayed{
+			background-color: red;
 		}		
 
-		.state-attended{
+		.state-closed{
 			background-color: green;
 		}			
 
@@ -222,9 +222,15 @@
 	</style>
 
 	<div class="content">
-		<div class="row">
-			<div id="call-list">
+			{% for ob in data %}
+
+				{% if loop.index0%4==0 %}				
+					<div class="row">
+						<div id="call-list">		
+				{% endif %}
+
 				<div class="col3">
+
 					<div class="call-card on-time-state">
 						<div class="call-card-top">
 							<div class="card-support">
@@ -236,17 +242,30 @@
 								<img src="static/img/bubble.png" />					
 							</div>
 
-							<div class="card-category">Iluminação Pública</div>
-							<div class="card-street">R. Marechal Deodoro da Fonseca</div>
+							<div class="card-category">{{ ob.category|e }}</div>
+							<div class="card-street">{{ ob.street_name }}</div>
 						</div>
 
-						<div class="call-card-bottom state-attended">
-							<p>Em andamento</p>
+						{% if ob.state=="aberto" %}
+							<div class="call-card-bottom state-open">
+						{% elif ob.state=="fechado" %}
+							<div class="call-card-bottom state-closed">
+						{% elif ob.state=="atrasado" %}
+							<div class="call-card-bottom state-delayed">
+						{% else %}
+							<div class="call-card-bottom">
+						{% endif %}
+							<p>{{ob.state}}</p>
 						</div>
 					</div>
-				</div>
+				</div><!-- col3 -->
 
-			</div>
+				{% if loop.index0%4==3 %}
+						</div>
+					</div><!-- row -->
+				{% endif %}
+
+			{% endfor %}
 
 		</div>
 	
