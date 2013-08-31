@@ -11,6 +11,7 @@
 
 </head>
 <body>
+
 	<div class="hero-unit">
 		1746 MAPS
 	</div>
@@ -23,18 +24,24 @@
 			/*background-color:blue;*/
 		}
 
-		#social-panel{
-			height: 400px;
-			background-color: red;
-			display:none;
-		}
 	</style>
+
+	<div id="teste"></div>
 
 	<script>
 
 		$(document).ready(function(){
 
-			$("#call-list ul li").click(function(){
+			function afterOpenPanel(){
+				setTimeout(function(){
+					$(".s")
+				},500);
+			}
+
+			$("#call-list ul li").click(function(e){
+				
+				$("#call-list ul li").removeClass("active");
+				$(e.target.parentNode).addClass("active");
 
 				if( $("#social-panel").css("display")==="none" ){
 
@@ -65,10 +72,9 @@
 
 			</div>
 
-			<div id="social-panel" class="panel col4">
-
-			</div>
+			<iframe src="social_panel/123"></iframe>
 		</div>
 	</div>
+
 </body>
 </html>
