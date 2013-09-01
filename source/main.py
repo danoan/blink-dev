@@ -17,6 +17,9 @@ def hello():
 
 	j = _get_db()
 
+	for x in j:
+		x["category"] = x["id"] % 3:
+
 	category = [u"Iluminação pública",u"Poda de árvore",u"Conservação de vias",u"Estacionamento irregular"]
 
 	for x in j:
