@@ -33,6 +33,11 @@ def hello():
 	return render_template('index.html',**template_vars)
 
 
+@app.route('/call_object/<call_id>')
+def call_object(call_id):
+    template_vars = {"call_title":"Chamado " + call_id, "call_object_id":call_id}
+    return render_template('call_object_template.html',**template_vars)
+
 @app.route('/social_panel/<call_id>')
 def social_panel(call_id):
 	import time
