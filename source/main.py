@@ -17,6 +17,9 @@ def hello():
 
 	j = _get_db()
 
+	for x in j:
+		x["category"] = x["id"] % 3
+
 	category = [u"Iluminação pública",u"Poda de árvore",u"Conservação de vias",u"Estacionamento irregular"]
 
 	for x in j:
@@ -48,7 +51,7 @@ def social_panel(call_id):
 	fechado = time.strptime(r["dt_fechado"], "%Y-%m-%d %H:%M:%S")
 	fechado = time.strftime("%d/%m/%Y",fechado)
 	
-	bairro = r["bairro"]
+	bairro = r["bairro"].strip()
 	if len(bairro) > 18:
 		bairro = bairro[0:16] + "..."
 
@@ -77,11 +80,10 @@ def social_panel(call_id):
 						"due_date":fechado,
 						"call_object_id":call_object_id,
 						"category":u"Iluminação",
-						"state":"Aguardando",
 						"neighborhood":bairro,
 						"street":rua,
 						"street_type": rua_t,
-						"number":r["num"]
+						"number":r["num"],
 						"state":state[stateIndex]
 						}	
 	
