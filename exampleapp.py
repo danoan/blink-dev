@@ -31,28 +31,28 @@ def call_object(call_id):
 	j = _get_db()
 	r = None
 	for x in j:
-		if x["id"]==call_id:
+		if str(x["id"]) ==call_id:
 			r = x
 
-	default_text = "Existe alguém perto de você preocupado com a cidade. Deixe-nos saber se esta também é uma preocupação sua, e ajude a cidade do Rio de Janeiro a ficar ainda mais maravilhosa!"
-	default_image = "logo.png"
-	parameter_text  = "Existe alguém perto de você preocupado com %s de nossa cidade. Deixe-nos saber se esta também é uma preocupação sua, e ajude a cidade do Rio de Janeiro a ficar ainda mais maravilhosa!"
+	default_text = u"Existe alguém perto de você preocupado com a cidade. Deixe-nos saber se esta também é uma preocupação sua, e ajude a cidade do Rio de Janeiro a ficar ainda mais maravilhosa!"
+	default_image = u"logo.png"
+	parameter_text  = u"Existe alguém perto de você preocupado com %s de nossa cidade. Deixe-nos saber se esta também é uma preocupação sua, e ajude a cidade do Rio de Janeiro a ficar ainda mais maravilhosa!"
 	if r is None:
 		description = default_text
 		category_image  = default_image
 	else:
-		if r.category==u"Estacionamento Irregular":
+		if r["categoria"]==u"Estacionamento Irregular":
 			description = parameter_text % (u"o Estacionamento Irregular")
-			category_image = "marker_estacionamento.png"
-		elif r.category==u"Iluminação Pública":
+			category_image = u"marker_estacionamento.png"
+		elif r["categoria"]==u"Iluminação Pública":
 			description = parameter_text % (u"a Iluminação Pública")
 			category_image = "marker_iluminacao.png"
-		elif r.category==u"Conservação de Vias":
+		elif r["categoria"]==u"Conservação de Vias":
 			description = parameter_text % (u"a Conservação de Vias")
 			category_image = "marker_poda.png"
-		elif r.category==u"Poda de Árvores":
+		elif r["categoria"]==u"Poda de Árvores":
 			description = parameter_text % (u"a Poda de Árvores")
-			category_image = "marker_vias.png"
+			category_image = u"marker_vias.png"
 		else:
 			description=default_text
 			category_image = default_image
