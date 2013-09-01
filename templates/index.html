@@ -58,21 +58,132 @@
 				getFacebookData( $(this).attr("call_id"),putFacebookData );
 			});
 		}
+
+		$(document).ready(function(){
+			$(".select-filter-type").change(function(e){
+
+			});
+
+			$(".text-filter-input input").keydown(function(e){
+				
+				if(e.keyCode==13 || e.keyCode==18){
+					filter(filterSelected,$(this).val());	
+				}
+				
+			})
+
+			$("#filter-selector-cat").click(function(e){
+				filterSelect(0);
+			})
+
+			$("#filter-selector-end").click(function(e){
+				filterSelect(1);
+			})
+
+			
+		});
+
+		var filterSelected;
+		var categorySelected;
+
+		function filterSelect(id){	
+			if(id==0){
+				filterSelected = "category";
+				$(".select-filter-input").css("display","inline");
+				$(".text-filter-input").css("display","none");
+			}else{
+				filterSelected = "street";
+				$(".select-filter-input").css("display","none");
+				$(".text-filter-input").css("display","inline");
+			}
+		}
+
+		function categorySelect(id){
+			$("#filterCategoryButton").html( $("#fc-"+id).html() + "<span class=\"caret\"></span>");
+			categorySelected = id;
+
+			filter(filterSelected,categorySelected);
+		}
+
+		function filter(type,value){
+			$.ajax({
+				type:"GET",
+				url:"filter/"+ type + "/" + value,
+				dataType:"json",
+				success:function(r){
+					initialize(r);
+					
+				},
+				error:function(r){
+					console.log(r);
+				}
+			});
+		}
+
 	</script>
+
+	<style>
+		.select-filter-input{
+			display:none;
+		}
+		.text-filter-input{
+			display:none;
+		}
+
+		.filter-selector{
+			margin: 0px 4px 0px 2px;	
+		}
+
+		.filter-div{
+			margin-top:-5px;
+			padding-top:0px;
+		}
+		
+		#search-input-box{
+			height: 20px;
+		}
+
+	</style>
 </head>
 <body>
 	<div id="my-hero-unit" class="hero-unit">
-		<img id="logo" src="static/img/logo.png" width="30%" />
+		<a href="/"><img id="logo" src={{ url_for('static', filename='img/logo.png') }} style="width:20%;" /></a>
 		<h1>Mapa 1746</h1>
 		<p>O Mapa 1746 é o portal de colaboração onde o cidadão carioca faz diferença.</p>
 	</div>
 
 	<div class="well">
-		<div class="btn-toolbar view-selector-btn">
-			<div class="btn-group">
-				<button type="button" id="view-selector-map" class="btn btn-primary">Mapa</button>
-				<button type="button" id="view-selector-cards" class="btn btn-primary">Cartões</button>
+		<div class="row">
+			<div class="col3 btn-toolbar filter-div">		
+				<div class="btn-group filter-selector">
+					<button type="button" id="filter-selector-cat" class="btn btn-primary">Categorias</button>
+					<button type="button" id="filter-selector-end" class="btn btn-primary">Endereços</button>
+				</div>
+
+				<div class="btn-group select-filter-input">
+					<button id="filterCategoryButton" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+					Iluminação Pública<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li><a id="fc-0" href="javascript:categorySelect(0)">Iluminação Pública</a></li>
+						<li><a id="fc-1" href="javascript:categorySelect(1)">Estacionamento Irregular</a></li>
+						<li><a id="fc-2" href="javascript:categorySelect(2)">Conservação de Vias</a></li>
+						<li><a id="fc-3" href="javascript:categorySelect(3)">Poda de Árvores</a></li>
+					</ul>
+				</div>		
+
+				<div class="input-groupinput-group-lg text-filter-input">
+					<input id="search-input-box" type="text" class="form-control input-lg" />
+				</div>						
 			</div>
+
+			<div class="col9 btn-toolbar view-selector-btn">
+				<div class="btn-group">
+					<button type="button" id="view-selector-map" class="btn btn-primary">Mapa</button>
+					<button type="button" id="view-selector-cards" class="btn btn-primary">Cartões</button>
+				</div>
+			</div>
+
 		</div>
 
 	</div>
@@ -85,10 +196,8 @@
 			initialize(json)
 		});
 
-
 		function initialize(json) 
 		{
-
 			var mapOptions = 
 			{
 		  		zoom: 12,
@@ -96,26 +205,28 @@
 		    		mapTypeId: google.maps.MapTypeId.ROADMAP
 		  	};
 		
-		  	myMap = new google.maps.Map(document.getElementById('mapDiv'),
-		      					mapOptions);
+		  	myMap = new google.maps.Map(document.getElementById('mapDiv'), mapOptions);
 
 		  	setMarkers(json);
 		}
 
-		function setMarkers(markerList){
+		function setMarkers(callList){
 
 			var markers = [];
 
-		  	for (i in markerList){
-		  		console.log(markerList[i]);
-				var latLng = new google.maps.LatLng(markerList[i].x, markerList[i].y);
-			  	var markerImg = new google.maps.MarkerImage('static/img/tree.png', new google.maps.Size(24, 32));
+		  	for (i in callList){
+		  		
+				var latLng = new google.maps.LatLng(callList[i].x, callList[i].y);
+
+				var imgUrl = getCallImageByCategory(callList[i].categoria);
+
+			  	var markerImg = new google.maps.MarkerImage(imgUrl, new google.maps.Size(35, 52));
 
 			  	var marker = new google.maps.Marker({
 			  			position: latLng, 
 			  			map: myMap,
 			  			icon:markerImg,
-			  			callId: markerList[i].id
+			  			callId: callList[i].id
 			  			});
 
 			  	addMarkerClickListener(marker);
@@ -126,13 +237,21 @@
 			var markerCluster = new MarkerClusterer(myMap, markers);	
 		}
 
+		function getCallImageByCategory(category){
+			
+			if (category == "Iluminação Pública")       return "static/img/marker_iluminacao.png";
+			if (category == "Estacionamento Irregular") return "static/img/marker_estacionamento.png";
+			if (category == "Conservação de Vias")      return "static/img/marker_vias.png";
+			if (category == "Poda de Árvores")          return "static/img/marker_poda.png";
+
+			return "static/img/tree.png";
+		}
+
 		function addMarkerClickListener(marker) {
 			google.maps.event.addListener(marker, 'click', function() {				
 				location.assign("social_panel/" + marker.callId)
 		  	});
 		}
-
-		//google.maps.event.addDomListener(window, 'load', initialize);
 
 		$(document).ready(function(){
 
@@ -159,49 +278,49 @@
 	</script>
 
 	<div class="content" id = "cards" style="display:none;">
-			{% for ob in data %}
+		{% for ob in data %}
 
-				{% if loop.index0%4==0 %}				
-					<div class="row">
-						<div id="call-list">		
-				{% endif %}
+			{% if loop.index0%4==0 %}				
+				<div class="row">
+					<div id="call-list">		
+			{% endif %}
 
-				<div class="col3">
-					<div call_id="{{ob.call_id}}" class="call-card on-time-state">
-						<div class="call-card-top">
-							<div id="like-{{ob.call_id}}" class="card-support">
-								<span >42</span>
-								<img src="static/img/like.png" />
+						<div class="col3">
+							<div call_id="{{ob.call_id}}" class="call-card on-time-state">
+								<div class="call-card-top">
+									<div id="like-{{ob.call_id}}" class="card-support">
+										<span >42</span>
+										<img src="static/img/like.png" />
+									</div>
+									<div id="comment-{{ob.call_id}}" class="card-comment">
+										<span>12</span>
+										<img src="static/img/bubble.png" />					
+									</div>
+
+									<div class="card-category">{{ ob.category|e }}</div>
+									<div class="card-street">{{ ob.street_name }}</div>
+								</div>
+
+								{% if ob.state=="aberto" %}
+									<div class="call-card-bottom state-open">
+								{% elif ob.state=="fechado" %}
+									<div class="call-card-bottom state-closed">
+								{% elif ob.state=="atrasado" %}
+									<div class="call-card-bottom state-delayed">
+								{% else %}
+									<div class="call-card-bottom">
+								{% endif %}
+									<p>{{ob.state}}</p>
+								</div>
 							</div>
-							<div id="comment-{{ob.call_id}}" class="card-comment">
-								<span>12</span>
-								<img src="static/img/bubble.png" />					
-							</div>
+						</div><!-- col3 -->
 
-							<div class="card-category">{{ ob.category|e }}</div>
-							<div class="card-street">{{ ob.street_name }}</div>
-						</div>
-
-						{% if ob.state=="aberto" %}
-							<div class="call-card-bottom state-open">
-						{% elif ob.state=="fechado" %}
-							<div class="call-card-bottom state-closed">
-						{% elif ob.state=="atrasado" %}
-							<div class="call-card-bottom state-delayed">
-						{% else %}
-							<div class="call-card-bottom">
-						{% endif %}
-							<p>{{ob.state}}</p>
-						</div>
+			{% if loop.index0%4==3 %}
 					</div>
-				</div><!-- col3 -->
+				</div><!-- row -->
+			{% endif %}
 
-				{% if loop.index0%4==3 %}
-						</div>
-					</div><!-- row -->
-				{% endif %}
-
-			{% endfor %}
+		{% endfor %}
 
 			</div>
 		</div>
