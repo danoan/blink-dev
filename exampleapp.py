@@ -107,4 +107,4 @@ def get_db():
 	return json.dumps( _get_db() )
 
 def _get_db():
-	return json.load(open("static/data/data.js"),encoding="utf-8");
+	return json.load(open("static/data/data.js"),encoding="utf-8")
