@@ -57,8 +57,8 @@ def call_object(call_id):
 			description=default_text
 			category_image = default_image
 
-    template_vars = {"call_title":"Chamado " + call_id,"category_call_image":category_image,"category_description":description, "call_object_id":call_id}
-    return render_template('call_object_template.html',**template_vars)
+	template_vars = {"call_title":"Chamado " + call_id,"category_call_image":category_image,"category_description":description, "call_object_id":call_id}
+	return render_template('call_object_template.html',**template_vars)
 
 
 @app.route('/social_panel/<call_id>')
