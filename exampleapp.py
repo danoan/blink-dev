@@ -31,7 +31,7 @@ def call_object(call_id):
 	j = _get_db()
 	r = None
 	for x in j:
-		if x["id"]==call_id:
+		if str(x["id"]) ==call_id:
 			r = x
 
 	default_text = u"Existe alguém perto de você preocupado com a cidade. Deixe-nos saber se esta também é uma preocupação sua, e ajude a cidade do Rio de Janeiro a ficar ainda mais maravilhosa!"
