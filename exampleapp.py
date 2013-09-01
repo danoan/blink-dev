@@ -18,14 +18,7 @@ def hello():
 	j = _get_db()
 
 	for x in j:
-		x["category"] = x["id"] % 3
-
-	category = [u"Iluminação pública",u"Poda de árvore",u"Conservação de vias",u"Estacionamento irregular"]
-
-	for x in j:
-		cat_id = math.trunc(random.random()*len(category))
-
-		call_obj = {"call_id":x["id"],"category":category[cat_id],"reference":u"Supermercados Guanabara","call_description":u"Cidadão solicita que seu time passe a vencer no campeonato brasileiro", "street_name":x["rua"],"state":state[x["id"] % 3],"x":x["x"],"y":x["y"]}
+		call_obj = {"call_id":x["id"],"category":x["categoria"],"reference":u"Supermercados Guanabara","call_description":u"Cidadão solicita que seu time passe a vencer no campeonato brasileiro", "street_name":x["rua"],"state":state[x["id"] % 3],"x":x["x"],"y":x["y"]}
 		data.append(call_obj)
 
 	template_vars = {"data":data}
@@ -78,13 +71,17 @@ def social_panel(call_id):
 	else:
 		rua_t = None
 
+	categoria = r["categoria"]
+	if len(categoria) > 18:
+		categoria = categoria[0:16] + "..."
+
 	stateIndex = int(call_id) % 3
 
 	template_vars = {	"call_id":r["id"],
 						"open_date":aberto,
 						"due_date":fechado,
 						"call_object_id":call_object_id,
-						"category":u"Iluminação",
+						"category":categoria,
 						"neighborhood":bairro,
 						"street":rua,
 						"street_type": rua_t,
