@@ -61,11 +61,11 @@
 
 		$(document).ready(function(){
 			$(".select-filter-type").change(function(e){
-				console.log($(this));
+
 			});
 
 			$(".text-filter-input input").keydown(function(e){
-				console.log(e.keyCode);
+				
 				if(e.keyCode==13 || e.keyCode==18){
 					filter(filterSelected,$(this).val());	
 				}
@@ -105,7 +105,7 @@
 				dataType:"json",
 				success:function(r){
 					initialize(r);
-					console.log(r);
+					
 				},
 				error:function(r){
 					console.log(r);
@@ -176,7 +176,7 @@
     <script>
 		var myMap;
 
-		$.getJSON("http://localhost:5000/ws/", function(json) {
+		$.getJSON("http://blink-app.herokuapp.com/ws/", function(json) {
 			initialize(json)
 		});
 
@@ -202,7 +202,7 @@
 			var markers = [];
 
 		  	for (i in markerList){
-		  		console.log(markerList[i]);
+		  		
 				var latLng = new google.maps.LatLng(markerList[i].x, markerList[i].y);
 			  	var markerImg = new google.maps.MarkerImage('static/img/tree.png', new google.maps.Size(24, 32));
 
