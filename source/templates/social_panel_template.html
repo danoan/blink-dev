@@ -172,22 +172,22 @@
 
 				<div class="row div-avenida">
 					<div class="col12">
-						Avenida
+						{{street_type}}
 					</div>
 				</div>
 
 				<div class="row">
-					<div class="col7 panel-street-name">Marechal Deodoro da Fonseca</div>
+					<div class="col7 panel-street-name">{{street}}</div>
 					<div class="col5 div-categories">
 						<span class="label label-default">Iluminação Púb...</span>
-						<span class="label label-success">Recreio dos...</span>
+						<span class="label label-success">{{neighborhood}}</span>
 					</div>
 				</div>
 
 				<div class="row div-header-bottom">
 
 					<div class="col8 div-number">
-						Próximo ao número 2140
+						{% if number %} Próximo ao número {{number}} {% endif %}
 					</div>
 
 					<div class="col4">
