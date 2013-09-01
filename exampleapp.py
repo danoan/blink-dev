@@ -28,8 +28,38 @@ def hello():
 
 @app.route('/call_object/<call_id>')
 def call_object(call_id):
-    template_vars = {"call_title":"Chamado " + call_id, "call_object_id":call_id}
+	j = _get_db()
+	r = None
+	for x in j:
+		if x["id"]==call_id:
+			r = x
+
+	default_text = "Existe alguém perto de você preocupado com a cidade. Deixe-nos saber se esta também é uma preocupação sua, e ajude a cidade do Rio de Janeiro a ficar ainda mais maravilhosa!"
+	default_image = "logo.png"
+	parameter_text  = "Existe alguém perto de você preocupado com %s de nossa cidade. Deixe-nos saber se esta também é uma preocupação sua, e ajude a cidade do Rio de Janeiro a ficar ainda mais maravilhosa!"
+	if r is None:
+		description = default_text
+		category_image  = default_image
+	else:
+		if r.category==u"Estacionamento Irregular":
+			description = parameter_text % (u"o Estacionamento Irregular")
+			category_image = "marker_estacionamento.png"
+		elif r.category==u"Iluminação Pública":
+			description = parameter_text % (u"a Iluminação Pública")
+			category_image = "marker_iluminacao.png"
+		elif r.category==u"Conservação de Vias":
+			description = parameter_text % (u"a Conservação de Vias")
+			category_image = "marker_poda.png"
+		elif r.category==u"Poda de Árvores":
+			description = parameter_text % (u"a Poda de Árvores")
+			category_image = "marker_vias.png"
+		else:
+			description=default_text
+			category_image = default_image
+
+    template_vars = {"call_title":"Chamado " + call_id,"category_call_image":category_image,"category_description":description, "call_object_id":call_id}
     return render_template('call_object_template.html',**template_vars)
+
 
 @app.route('/social_panel/<call_id>')
 def social_panel(call_id):
@@ -116,7 +146,6 @@ def get_all(type):
 		data = _filter_street(j,"")
 
 	return json.dumps(data)
-
 
 @app.route('/filter/<type>/<value>')
 def filter(type,value):
