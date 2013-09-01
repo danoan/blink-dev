@@ -34,6 +34,7 @@ def call_object(call_id):
 		if str(x["id"]) ==call_id:
 			r = x
 
+	call_object_id = "http://blink-app.herokuapp.com/call_object/" + call_id
 	default_text = u"Existe alguém perto de você preocupado com a cidade. Deixe-nos saber se esta também é uma preocupação sua, e ajude a cidade do Rio de Janeiro a ficar ainda mais maravilhosa!"
 	default_image = u"logo.png"
 	parameter_text  = u"Existe alguém perto de você preocupado com %s de nossa cidade. Deixe-nos saber se esta também é uma preocupação sua, e ajude a cidade do Rio de Janeiro a ficar ainda mais maravilhosa!"
@@ -57,7 +58,7 @@ def call_object(call_id):
 			description=default_text
 			category_image = default_image
 
-	template_vars = {"call_title":"Chamado " + call_id,"category_call_image":category_image,"category_description":description, "call_object_id":call_id}
+	template_vars = {"call_title":"Chamado " + call_id,"category_call_image":category_image,"category_description":description, "call_object_id":call_object_id}
 	return render_template('call_object_template.html',**template_vars)
 
 
