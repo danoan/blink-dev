@@ -113,8 +113,11 @@
   padding: 5px;
   color: white; }
 
-#mapTeste {
-  margin: 0;
+#mapDiv {
+  margin: 0 auto;
   padding: 0;
-  height: 500px;
-  width: 100%; }
+  width: 960px;
+  height: 600px; }
+
+.view-selector-btn {
+  float: right !important; }

@@ -20,6 +20,20 @@
 		1746 MAPS
 	</div>
 
+	<div>
+		<div class="well">
+			<div class="btn-toolbar view-selector-btn">
+				<div class="btn-group">
+					<button type="button" id="view-selector-map" class="btn btn-primary">Mapa</button>
+				</div>
+				<div class="btn-group">
+					<button type="button" id="view-selector-cards" class="btn btn-primary">Cartões</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
     <script>
 		var myMap;
 
@@ -55,7 +69,7 @@
 	    		mapTypeId: google.maps.MapTypeId.ROADMAP
 		  	};
 		
-		  	myMap = new google.maps.Map(document.getElementById('mapTeste'),
+		  	myMap = new google.maps.Map(document.getElementById('mapDiv'),
 		      					mapOptions);
 
 		  	setMarkers(generateMarkerDict());
@@ -96,10 +110,18 @@
 		$(document).ready(function(){
 
 			$(".call-card").click(function(e){
-				// console.log($(e.currentTarget));
 				var cid = $(e.currentTarget).attr("call_id");
-				// console.log(cid);
 				location.assign("social_panel/" + cid);
+			});
+
+			$("#view-selector-map").click(function(e){
+				$("#cards").css({display:"none"});
+				$("#mapDiv").css({display:"block"});
+			});
+
+			$("#view-selector-cards").click(function(e){
+				$("#mapDiv").css({display:"none"});	
+				$("#cards").css({display:"block"});		
 			});
 
 		});
@@ -107,7 +129,7 @@
 
 	</script>
 
-	<div class="content">
+	<div class="content" id = "cards" style="display:none;">
 			{% for ob in data %}
 
 				{% if loop.index0%4==0 %}				
@@ -152,13 +174,12 @@
 
 			{% endfor %}
 
+			</div>
 		</div>
-	
 	</div>
 
-	<div id="mapTeste">
+	<div id="mapDiv">
 		
 	</div>
-
 </body>
 </html>
