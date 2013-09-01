@@ -39,6 +39,12 @@
 			}
 		</style>
 
+		<script>
+			var funcId = setTimeout(function(){
+				$(".facebook-plugins fb-like span")
+			},500);
+		</script>
+
 	</head>
 	<body>
 
@@ -71,9 +77,12 @@
 			<div class="title1">{{call_id}}</div>
 			<span class="label label-primary">{{category}}</span>
 			<div class="title3 call-state-aguardando">{{state}}</div>
-			<div class="fb-like" data-href="{{call_object_id}}" data-width="450" data-show-faces="true" data-send="true" data-action="recommend"></div>		
 
-			<div class="fb-comments" data-href="http://blink-app.herokuapp.com/blog" data-width="470"></div>		
+			<div class="facebook-plugins">
+				<div class="fb-like" data-href="{{call_object_id}}" data-width="450" data-show-faces="true" data-send="true" data-action="recommend"></div>		
+
+				<div class="fb-comments" data-href="http://blink-app.herokuapp.com/blog" data-width="470"></div>		
+			</div>
 		</div>
 
 

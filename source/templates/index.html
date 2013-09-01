@@ -6,70 +6,75 @@
 	<link rel="stylesheet" href="static/css/bootstrap.css"></link>
 	<link rel="stylesheet" href="static/css/mygs-fluid.css"></link>
 	<link rel="stylesheet" href="static/css/base.css"></link>
+	<link href="/maps/documentation/javascript/examples/default.css" rel="stylesheet">
 
 	<script type="text/javascript" src="static/js/jquery-1.8.2.min.js"></script>
 	<script type="text/javascript" src="static/js/bootstrap.js"></script>
 
-    	<link href="/maps/documentation/javascript/examples/default.css" rel="stylesheet">
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 </head>
 <body>
 
 	<div class="hero-unit">
 		1746 MAPS
-		<img src={{ url_for('static', filename ='img/tree.png') }} />
 	</div>
 
-	<style>
-		.content{width: 1280px; margin:0 auto;}
-	
-		#call-list{
-			height: 150px;
-		}
-
-		#social-panel-container{
-			height: 500px;
-			display: none;
-			overflow: hidden;
-		}
-
-		#social-panel-container iframe{
-			width:100%;
-			height: 500px;
-			padding: 0;
-			margin: 0;
-			border: 0;
-		}
-		
-
-	</style>
-
     <script>
-	var myMap;
-	function initialize() 
-	{
-		var mapOptions = 
+		var myMap;
+
+		function generateMarkerDict()
 		{
-	  		zoom: 4,
-    			center: new google.maps.LatLng(-33, 151),
-    			mapTypeId: google.maps.MapTypeId.ROADMAP
-	  	};
-	
-	  	myMap = new google.maps.Map(document.getElementById('mapTeste'),
-	      					mapOptions);
-	  	
-		var myLatLng = new google.maps.LatLng(-33.890542, 151.274856);
+
+			var neighborhood = [ {b:"meier",c:[-22.899185,-43.282964]},
+								{b:"tijuca",c:[-22.934998,-43.237064]},
+								{b:"penha",c:[-22.834889,-43.277821]},
+								{b:"sao cristovao",c:[-22.896912,-43.220175]},
+								{b:"centro",c:[-22.907408,-43.177141]},
+								{b:"catete",c:[-22.925117,-43.179152]},
+								{b:"ipanema",c:[-22.982693,-43.204472]},
+								{b:"botafogo",c:[-22.951596,-43.189844]},
+								{b:"barra",c:[-22.993163,-43.365837]}
+							   ];
+
+			var markerDict = {};
+
+			for (var i = 0;i < neighborhood.length; i++){
+				markerDict[neighborhood[i].b] = neighborhood[i].c;
+			}
+
+			return markerDict;
+		}
+
+		function initialize() 
+		{
+			var mapOptions = 
+			{
+		  		zoom: 12,
+	    		center: new google.maps.LatLng(-22.934998,-43.237064),
+	    		mapTypeId: google.maps.MapTypeId.ROADMAP
+		  	};
 		
+		  	myMap = new google.maps.Map(document.getElementById('mapTeste'),
+		      					mapOptions);
+		  	
 
-		var beachMarker = new google.maps.Marker({
-			position: myLatLng,
-			map: myMap,
-			icon: {{ url_for('static', filename = 'img/tree.png') }}
-	  });
+		  	setMarkers(generateMarkerDict());
+		}
 
-	}
+		function setMarkers(markerDict){
 
-	google.maps.event.addDomListener(window, 'load', initialize);
+		  	for (key in markerDict){
+		  		var myLatLng = new google.maps.LatLng(markerDict[key][0], markerDict[key][1]);
+			
+				var beachMarker = new google.maps.Marker({
+					position: myLatLng,
+					map: myMap,
+					icon: 'static/img/tree.png'
+			 	});
+		  	}
+		}
+
+		google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>
 
@@ -102,124 +107,6 @@
 			</div>
 		</div>
 	</div>
-
-	<style>
-		.on-time-state{
-			background: #ffffff; /* Old browsers */
-			background: -moz-linear-gradient(top,  #ffffff 0%, #eaeaea 100%); /* FF3.6+ */
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#eaeaea)); /* Chrome,Safari4+ */
-			background: -webkit-linear-gradient(top,  #ffffff 0%,#eaeaea 100%); /* Chrome10+,Safari5.1+ */
-			background: -o-linear-gradient(top,  #ffffff 0%,#eaeaea 100%); /* Opera 11.10+ */
-			background: -ms-linear-gradient(top,  #ffffff 0%,#eaeaea 100%); /* IE10+ */
-			background: linear-gradient(to bottom,  #ffffff 0%,#eaeaea 100%); /* W3C */
-			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#eaeaea',GradientType=0 ); /* IE6-9 */
-		}
-
-		.expired-state{
-			background: #ffffff; /* Old browsers */
-			background: -moz-linear-gradient(top,  #ffffff 0%, #eaeaea 100%); /* FF3.6+ */
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#eaeaea)); /* Chrome,Safari4+ */
-			background: -webkit-linear-gradient(top,  #ffffff 0%,#eaeaea 100%); /* Chrome10+,Safari5.1+ */
-			background: -o-linear-gradient(top,  #ffffff 0%,#eaeaea 100%); /* Opera 11.10+ */
-			background: -ms-linear-gradient(top,  #ffffff 0%,#eaeaea 100%); /* IE10+ */
-			background: linear-gradient(to bottom,  #ffffff 0%,#eaeaea 100%); /* W3C */
-			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#eaeaea',GradientType=0 ); /* IE6-9 */
-		}
-
-		.state-open{
-			background-color: gray;
-		}
-
-		.state-delayed{
-			background-color: red;
-		}		
-
-		.state-closed{
-			background-color: green;
-		}			
-
-		#mapTeste{
-			margin: 0;
-        		padding: 0;
-        		height: 500px;
-			width: 100%;
-		}
-
-		.call-card{
-			width: 90%;			
-			height: 128px;
-
-			border-radius: 5px 5px 5px 5px;
-			box-shadow: 2px 2px 5px 1px #AAA;
-			border:1px solid black;
-		}			
-
-		.call-card-top{
-			position: relative;
-			font-family: "Helvetica", sans-serif;
-
-			height: 100px;
-
-
-			padding: 8px;
-			box-sizing:border-box;
-			border-radius: 5px 5px 0px 0px;
-
-
-		}
-
-		.card-category{
-			height: 20px;
-			width: 85%;
-			font-size: 15px;
-		}
-
-		.card-street{
-			height: 26px;
-			font-size: 28px;
-			position: relative;
-			top:50%;
-			margin-top:-35px;			
-			line-height: 28px;
-		}
-
-		.card-support{
-			position: absolute;
-			width: 25%;
-			left: 70%;
-		}
-
-		.card-support img{
-			height: 15px;
-			top:-4px;
-			position: relative;
-		}
-
-		.card-comment img{
-			height: 15px;
-			top:-2px;
-			position: relative;
-		}		
-
-		.card-comment{
-			position: absolute;
-			left: 85%;
-		}
-
-		.call-card-bottom{
-			height: 28px;
-			border-radius: 0px 0px 5px 5px;
-			font-size: 18px;
-			text-align: center;
-			position: relative;
-		}
-
-		.call-card-bottom p{		
-			padding: 5px;
-			color: white;
-		}
-
-	</style>
 
 	<div class="content">
 			{% for ob in data %}
