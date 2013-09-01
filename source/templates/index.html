@@ -13,6 +13,54 @@
 
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
 	<script type="text/javascript" src="static/js/markerclusterer.js"></script>
+
+	<script>
+		function getFacebookData(call_id,fn_callback){
+			var url = "https://graph.facebook.com/http://blink-app.herokuapp.com/call_object/" + call_id;
+
+			$.ajax({
+				type:"GET",
+				"url": url,
+				dataType:"json",
+				success:function(r){
+					fn_callback(call_id,r,"ok");
+				},
+				error:function(r){
+					fn_callback(call_id,null,"error");
+				}
+			});
+
+		}
+
+		function putFacebookData(call_id,obj_json,type){
+			console.log(obj_json);
+			console.log(type);
+
+			var like = "#like-"+call_id;
+			var comment = "#comment-"+call_id;
+
+			if(type==="error"){
+				$(like).css("visibility","hidden");
+				$(comment).css("visibility","hidden");
+			}else{
+				if(obj_json.shares==undefined)
+					$( $(like) ).css("visibility","hidden");
+				else
+					$( $(like+" span") ).html(obj_json.shares);
+
+				if(obj_json.comments==undefined)
+					$( $(comment) ).css("visibility","hidden");
+				else
+					$( $(comment+" span") ).html(obj_json.comments);
+			}
+		}
+
+		function loadFacebookData(){
+			$(".call-card").each(function(idx){
+				getFacebookData( $(this).attr("call_id"),putFacebookData );
+			});
+		}
+	</script>
 </head>
 <body>
 
@@ -124,6 +172,8 @@
 				$("#cards").css({display:"block"});		
 			});
 
+			loadFacebookData();
+
 		});
 
 
@@ -140,11 +190,11 @@
 				<div class="col3">
 					<div call_id="{{ob.call_id}}" class="call-card on-time-state">
 						<div class="call-card-top">
-							<div class="card-support">
-								<span>42</span>
+							<div id="like-{{ob.call_id}}" class="card-support">
+								<span >42</span>
 								<img src="static/img/like.png" />
 							</div>
-							<div class="card-comment">
+							<div id="comment-{{ob.call_id}}" class="card-comment">
 								<span>12</span>
 								<img src="static/img/bubble.png" />					
 							</div>

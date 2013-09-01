@@ -43,8 +43,8 @@ def social_panel(call_id):
 
 @app.route('/ws/<call_id>')
 def get_call(call_id):
-	
 	j = json.load(open("static/data/data.js"),encoding="utf-8")
+
 
 	for x in j:
 		if str(x["id"])== str(call_id):			
