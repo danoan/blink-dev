@@ -120,26 +120,14 @@
   height: 600px; }
 
 .view-selector-btn {
-  text-align: right;
-  margin: -3px; }
+  text-align: right; }
 
 .category-icon {
   float: left; }
 
 .well {
-  background-color: #FFA340; 
-  
-}
+  background-color: #FFA340; }
 
 #my-hero-unit {
   margin-bottom: 0;
   background-color: #3AA6D0; }
-
-#my-hero-unit h1 {
-  text-shadow: 1px 1px 1px #FFF;
-  color: #3B73bb; }
-
-#logo {
-  float: left;
-  margin-top: -40px;
-  margin-left: -20px; }
