@@ -131,3 +131,12 @@
 #my-hero-unit {
   margin-bottom: 0;
   background-color: #3AA6D0; }
+
+#my-hero-unit h1 {
+  text-shadow: 1px 1px 1px #FFF;
+  color: #3B73bb; }
+
+#logo {
+  float: left;
+  margin-top: -40px;
+  margin-left: -20px; }
