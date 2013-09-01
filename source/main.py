@@ -1,6 +1,7 @@
 #coding:utf-8
 
 import os
+import json
 import random,math
 from flask import Flask, session, request, redirect, render_template, url_for
 from flaskext.mysql import MySQL
@@ -25,7 +26,7 @@ def hello():
 		str_id = math.trunc(random.random()*len(street_name))
 		st_id = math.trunc(random.random()*len(state))
 
-		call_obj = {"category":category[cat_id],"reference":u"Supermercados Guanabara","call_description":u"Cidadão solicita que seu time passe a vencer no campeonato brasileiro", "street_name":street_name[str_id],"state":state[st_id]}
+		call_obj = {"call_id":i,"category":category[cat_id],"reference":u"Supermercados Guanabara","call_description":u"Cidadão solicita que seu time passe a vencer no campeonato brasileiro", "street_name":street_name[str_id],"state":state[st_id]}
 		data.append(call_obj)
 
 	template_vars = {"data":data}
@@ -33,20 +34,23 @@ def hello():
 	return render_template('index.html',**template_vars)
 
 
-@app.route('/call_object/<call_id>')
-def call_object(call_id):
-	call_id = "http://blink-app.heroku/blog"
-	template_vars = {"call_title":"Chamado Maneiro", "call_object_id":call_id}
-
-	return render_template('call_object_template.html',**template_vars)
-
-
 @app.route('/social_panel/<call_id>')
-def sociil_panel(call_id):
-	call_object_id = "http://blink-app.heroku/blog"
-	template_vars = {"call_id":call_id,"call_object_id":call_object_id,"category":u"Iluminação","state":"Aguardando"}	
+def social_panel(call_id):
+	call_object_id = "http://blink-app.herokuapp.com/call_object/" + call_id
+	template_vars = {"call_id":call_id,"open_date":"04/03/2013","due_date":"04/03/2013","call_object_id":call_object_id,"category":u"Iluminação","state":"Aguardando"}	
 	
 	return render_template('social_panel_template.html',**template_vars)
+
+@app.route('/ws/<call_id>')
+def get_call(call_id):
+	
+	j = json.load(open("static/data/data.js"),encoding="utf-8")
+
+	for x in j:
+		if str(x["id"])== str(call_id):			
+			return json.dumps( x )
+
+	return "Nao encontrei " + call_id
 
 @app.route('/db')
 def db():
