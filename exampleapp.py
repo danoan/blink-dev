@@ -106,5 +106,57 @@ def get_call(call_id):
 def get_db():
 	return json.dumps( _get_db() )
 
+@app.route('/filter/<type>/')
+def get_all(type):
+	j = _get_db()
+	data = []
+	if type=="category":
+		data = _filter_category(j,"")
+	elif type=="street":
+		data = _filter_street(j,"")
+
+	return json.dumps(data)
+
+
+@app.route('/filter/<type>/<value>')
+def filter(type,value):
+	j = _get_db()
+	data = []
+	if type=="category":
+		data = _filter_category(j,value)
+	elif type=="street":
+		data = _filter_street(j,value)
+
+	return json.dumps(data)
+
+def _filter_category(db,value):
+	filtered_items = []
+
+	if value=="0":
+		value=u"Iluminação Pública"
+	elif value=="1":
+		value=u"Estacionamento Irregular"
+	elif value=="2":
+		value=u"Conservação de Vias"
+	elif value=="3":
+		value=u"Poda de Árvores"
+
+	for x in db:
+		if(x["categoria"]==value):
+			filtered_items.append(x)
+
+	return filtered_items
+
+def _filter_street(db,value):
+	filtered_items = []
+	value = value.upper()
+
+	for x in db:
+		rua = x["rua"].upper()
+		if( value in rua ):
+			filtered_items.append(x)
+
+	return filtered_items
+
 def _get_db():
 	return json.load(open("static/data/data.js"),encoding="utf-8");

@@ -58,7 +58,71 @@
 				getFacebookData( $(this).attr("call_id"),putFacebookData );
 			});
 		}
+
+		$(document).ready(function(){
+			$(".select-filter-type").change(function(e){
+				console.log($(this));
+			});
+
+			$(".text-filter-input input").keydown(function(e){
+				console.log(e.keyCode);
+				if(e.keyCode==13 || e.keyCode==18){
+					filter(filterSelected,$(this).val());	
+				}
+				
+			})
+
+			
+		});
+
+		var filterSelected;
+		var categorySelected;
+
+		function filterSelect(id){
+			$("#filterTypeButton").html( $("#fs-"+id).html() + "<span class=\"caret\"></span>" );		
+			if(id==0){
+				filterSelected = "category";
+				$(".select-filter-input").css("display","block");
+				$(".text-filter-input").css("display","none");
+			}else{
+				filterSelected = "street";
+				$(".select-filter-input").css("display","none");
+				$(".text-filter-input").css("display","block");
+			}
+		}
+
+		function categorySelect(id){
+			$("#filterCategoryButton").html( $("#fc-"+id).html() + "<span class=\"caret\"></span>");
+			categorySelected = id;
+
+			filter(filterSelected,categorySelected);
+		}
+
+		function filter(type,value){
+			$.ajax({
+				type:"GET",
+				url:"filter/"+ type + "/" + value,
+				dataType:"json",
+				success:function(r){
+					initialize(r);
+					console.log(r);
+				},
+				error:function(r){
+					console.log(r);
+				}
+			});
+		}
+
 	</script>
+
+	<style>
+		.select-filter-input{e
+			display:none;
+		}
+		.text-filter-input{
+			display:none;
+		}		
+	</style>
 </head>
 <body>
 	<div id="my-hero-unit" class="hero-unit">
@@ -67,11 +131,42 @@
 	</div>
 
 	<div class="well">
-		<div class="btn-toolbar view-selector-btn">
-			<div class="btn-group">
-				<button type="button" id="view-selector-map" class="btn btn-primary">Mapa</button>
-				<button type="button" id="view-selector-cards" class="btn btn-primary">Cartões</button>
+		<div class="row">
+			<div class="col9 btn-toolbar view-selector-btn" style="text-align:left">		
+				<div class="btn-group select-filter-type">
+					<button id="filterTypeButton" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+					Filtrar Busca <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li><a id="fs-0" href="javascript:filterSelect(0)">Por categoria</a></li>
+						<li><a id="fs-1" href="javascript:filterSelect(1)">Por Logradouro</a></li>
+					</ul>
+				</div>
+
+				<div class="btn-group select-filter-input">
+					<button id="filterCategoryButton" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+					Iluminação Pública<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li><a id="fc-0" href="javascript:categorySelect(0)">Iluminação Pública</a></li>
+						<li><a id="fc-1" href="javascript:categorySelect(1)">Estacionamento Irregular</a></li>
+						<li><a id="fc-2" href="javascript:categorySelect(2)">Conservação de Vias</a></li>
+						<li><a id="fc-3" href="javascript:categorySelect(3)">Poda de Árvores</a></li>
+					</ul>
+				</div>		
+
+				<div class="btn-group text-filter-input">
+					<input type="text" class="input-large" />
+				</div>						
 			</div>
+
+			<div class="col3 btn-toolbar view-selector-btn">
+				<div class="btn-group">
+					<button type="button" id="view-selector-map" class="btn btn-primary">Mapa</button>
+					<button type="button" id="view-selector-cards" class="btn btn-primary">Cartões</button>
+				</div>
+			</div>
+
 		</div>
 
 	</div>
@@ -80,7 +175,7 @@
     <script>
 		var myMap;
 
-		$.getJSON("http://blink-app.herokuapp.com/ws/", function(json) {
+		$.getJSON("http://localhost:5000/ws/", function(json) {
 			initialize(json)
 		});
 
