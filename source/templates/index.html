@@ -86,44 +86,26 @@
 		}
 
 		function addMarkerClickListener(marker) {
-		  google.maps.event.addListener(marker, 'click', function() {
-		  	console.log(marker.position);
-		  });
+			google.maps.event.addListener(marker, 'click', function() {				
+				location.assign("social_panel/" + marker.callId)
+		  	});
 		}
 
 		google.maps.event.addDomListener(window, 'load', initialize);
 
-    </script>
-
-
-	<script>
 		$(document).ready(function(){
 
 			$(".call-card").click(function(e){
-				$("#myModal").modal({"remote":"social_panel/123"});
+				// console.log($(e.currentTarget));
+				var cid = $(e.currentTarget).attr("call_id");
+				// console.log(cid);
+				location.assign("social_panel/" + cid);
 			});
 
 		});
+
+
 	</script>
-
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-			
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					<h4 class="modal-title">Modal title</h4>
-				</div>
-				<div class="modal-body">
-
-				</div>
-
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
 
 	<div class="content">
 			{% for ob in data %}
@@ -134,8 +116,7 @@
 				{% endif %}
 
 				<div class="col3">
-
-					<div class="call-card on-time-state">
+					<div call_id="{{ob.call_id}}" class="call-card on-time-state">
 						<div class="call-card-top">
 							<div class="card-support">
 								<span>42</span>

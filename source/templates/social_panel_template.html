@@ -4,20 +4,97 @@
 		<meta charset="utf-8" />
 		<title>{{call_title}}</title>
 
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+		<link rel="stylesheet" href="/static/css/normalize.css"></link>
+		<link rel="stylesheet" href="/static/css/bootstrap.css"></link>
+		<link rel="stylesheet" href="/static/css/mygs-fluid.css"></link>
+		<link rel="stylesheet" href="/static/css/base.css"></link>
+		<link href="/maps/documentation/javascript/examples/default.css" rel="stylesheet">
+
+		<script type="text/javascript" src="/static/js/jquery-1.8.2.min.js"></script>
+		<script type="text/javascript" src="/static/js/bootstrap.js"></script>		
+
 		<style>
 			body{
 				margin-top:0px;
 			}
 			#social-panel{
-				height: 400px;
-				background-color: red;
-				padding: 20px 10px 10px 10px;
+				padding: 0 2em;
+				width: 640px;
+				margin: 0 auto;
+				padding: 1em 2em;
+			}
+
+			.facebook-plugins{
+				padding: 1em;
+				width: 600px;
+				margin: 0 auto;		
+			}
+
+			#social-panel-header{
+				width: 640px;
+				font-weight: bold;
+			}
+
+			.open-date{
+				color: #404040;				
+			}
+
+			.due-date{
+				color: #C74444;
+			}
+
+			.id{
+				color: #B0B0B0;
+			}
+
+			.panel-street-name{
+				font-size:28pt;
+				color: #333;
+				line-height: 40px;
+				font-weight: bold;
+			}
+
+			.div-avenida{
+				margin-top: 10px;
+				font-size: 20px;
+				color: #333;
+			}
+
+			.div-categories{
+				text-align: right;
+			}
+
+			.div-categories .label{
+				width: 200px;
+				text-align: center;
+				padding: 10px 8px;
+
+				margin-top: 7px;
+				font-family: "Helvetica", sans-serif;
+				font-size: 14px;				
+			}
+
+			.label-default{				
+				background-color: #E48600;
+			}
+
+			.label-success{
+				background-color: #c207ce;
+			}			
+
+			.div-header-bottom{
+				margin-top: 8px;
+			}
+
+			.div-number{
+				font-weight: bold;
 			}
 
 			.title1
 			{
 				font-size: 15;
-				text-align: left;
+				text-align: center;
 				font-style: bold;
 				border-top: 5px;
 			}
@@ -32,21 +109,33 @@
 
 			.title3
 			{
-				font-size: 22;
+				font-size: 18px;
 				text-align: center;
 				font-style: bold;
-				padding: 20px; 
+				padding: 6px; 
+				color: white;
+				margin-bottom: 8px;
 			}
-		</style>
 
-		<script>
-			var funcId = setTimeout(function(){
-				$(".facebook-plugins fb-like span")
-			},500);
-		</script>
+			.state-open{
+				background-color: gray;
+			}
+
+			.state-delayed{
+				background-color: red;
+			}		
+
+			.state-closed{
+				background-color: green;
+			}				
+		</style>
 
 	</head>
 	<body>
+
+		<div class="hero-unit">
+			1746 MAPS
+		</div>		
 
 		<div id="fb-root"></div>
 			<script>
@@ -74,14 +163,49 @@
 		</div>		
 
 		<div id="social-panel">
-			<div class="title1">{{call_id}}</div>
-			<span class="label label-primary">{{category}}</span>
-			<div class="title3 call-state-aguardando">{{state}}</div>
+			<div id="social-panel-header">
+				<div class="row">
+					<div class="title1 col4 open-date" style="text-align:left !important">Abertura: {{open_date}}</div>
+					<div class="title1 col4 due-date">Prazo: {{due_date}}</div>
+					<div class="title1 col4 id" style="text-align:right !important">ID: {{call_id}}</div>
+				</div>
 
-			<div class="facebook-plugins">
-				<div class="fb-like" data-href="{{call_object_id}}" data-width="450" data-show-faces="true" data-send="true" data-action="recommend"></div>		
+				<div class="row div-avenida">
+					<div class="col12">
+						Avenida
+					</div>
+				</div>
 
-				<div class="fb-comments" data-href="http://blink-app.herokuapp.com/blog" data-width="470"></div>		
+				<div class="row">
+					<div class="col7 panel-street-name">Marechal Deodoro da Fonseca</div>
+					<div class="col5 div-categories">
+						<span class="label label-default">Iluminação Púb...</span>
+						<span class="label label-success">Recreio dos...</span>
+					</div>
+				</div>
+
+				<div class="row div-header-bottom">
+
+					<div class="col8 div-number">
+						Próximo ao número 2140
+					</div>
+
+					<div class="col4">
+						<div class="fb-like" data-href="{{call_object_id}}" data-width="50" data-show-faces="true" data-action="like"></div>		
+					</div>
+
+				</div>
+
+				<div class="row">
+					<div class="title3 state-closed">{{state}}</div>
+				</div>
+			</div>	
+
+			
+
+			<div class="facebook-plugins">				
+
+				<div class="fb-comments" data-href="http://blink-app.herokuapp.com/blog" data-width="600"></div>		
 			</div>
 		</div>
 
