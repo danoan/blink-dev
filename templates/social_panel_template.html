@@ -1,0 +1,244 @@
+<!DOCUMENT html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>{{call_title}}</title>
+
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+		<link rel="stylesheet" href="/static/css/normalize.css"></link>
+		<link rel="stylesheet" href="/static/css/bootstrap.css"></link>
+		<link rel="stylesheet" href="/static/css/mygs-fluid.css"></link>
+		<link rel="stylesheet" href="/static/css/base.css"></link>
+		<link href="/maps/documentation/javascript/examples/default.css" rel="stylesheet">
+
+		<script type="text/javascript" src="/static/js/jquery-1.8.2.min.js"></script>
+		<script type="text/javascript" src="/static/js/bootstrap.js"></script>		
+
+		<style>
+			body{
+				margin-top:0px;
+			}
+			#social-panel{
+				padding: 0 2em;
+				width: 640px;
+				margin: 0 auto;
+				padding: 1em 2em;
+			}
+
+			.facebook-plugins{
+				padding: 1em;
+				width: 600px;
+				margin: 0 auto;		
+			}
+
+			#social-panel-header{
+				width: 640px;
+				font-weight: bold;
+			}
+
+			.open-date{
+				color: #404040;				
+			}
+
+			.due-date{
+				color: #C74444;
+			}
+
+			.id{
+				color: #B0B0B0;
+			}
+
+			.panel-street-name{
+				font-size:28pt;
+				color: #333;
+				line-height: 40px;
+				font-weight: bold;
+			}
+
+			.div-avenida{
+				margin-top: 10px;
+				font-size: 20px;
+				color: #333;
+			}
+
+			.div-categories{
+				text-align: right;
+			}
+
+			.div-categories .label{
+				width: 200px;
+				text-align: center;
+				padding: 10px 8px;
+
+				margin-top: 7px;
+				font-family: "Helvetica", sans-serif;
+				font-size: 14px;				
+			}
+
+			.label-default{				
+				background-color: #E48600;
+			}
+
+			.label-success{
+				background-color: #c207ce;
+			}			
+
+			.div-header-bottom{
+				margin-top: 8px;
+			}
+
+			.div-number{
+				font-weight: bold;
+			}
+
+			.title1
+			{
+				font-size: 15;
+				text-align: center;
+				font-style: bold;
+				border-top: 5px;
+			}
+
+			.title2
+			{
+				font-size: 22;
+				text-align: left;
+				font-style: bold;
+				padding: 2px; 
+			}
+
+			.title3
+			{
+				font-size: 18px;
+				text-align: center;
+				font-style: bold;
+				padding: 6px; 
+				color: white;
+				margin-bottom: 8px;
+			}
+
+			.state-open{
+				background-color: gray;
+			}
+
+			.state-delayed{
+				background-color: red;
+			}		
+
+			.state-closed{
+				background-color: green;
+			}				
+		</style>
+
+	</head>
+	<body>
+
+		<script>
+			$(document).ready(function(){
+
+				$("#social-panel-back").click(function(e){
+					location.assign("/");		
+				});
+			});
+		</script>
+
+		<div id="my-hero-unit" class="hero-unit">
+			<h1>1746 Maps</h1>
+			<p>1746 Maps é o portal de colaboração onde o cidadão carioca faz diferença.</p>
+		</div>	
+		
+		<div class="well">
+			<div class="btn-toolbar view-selector-btn">
+				<div class="btn-group">
+					<button type="button" id="social-panel-back" class="btn btn-danger">Voltar</button>
+				</div>
+			</div>
+		</div>
+
+		<div id="fb-root"></div>
+			<script>
+			  window.fbAsyncInit = function() {
+			    // init the FB JS SDK
+			    FB.init({
+			      appId      : '212341975598829',
+			      channelUrl : '//localhost', 
+			      status     : true,               
+			      xfbml      : true          
+			    });
+
+			    // Additional initialization code such as adding Event Listeners goes here
+			  };
+
+			  // Load the SDK asynchronously
+			  (function(d, s, id){
+			     var js, fjs = d.getElementsByTagName(s)[0];
+			     if (d.getElementById(id)) {return;}
+			     js = d.createElement(s); js.id = id;
+			     js.src = "//connect.facebook.net/en_US/all.js";
+			     fjs.parentNode.insertBefore(js, fjs);
+			   }(document, 'script', 'facebook-jssdk'));
+			</script>		
+		</div>		
+
+		<div id="social-panel">
+			<div id="social-panel-header">
+				<div class="row">
+					<div class="title1 col4 open-date" style="text-align:left !important">Abertura: {{open_date}}</div>
+					<div class="title1 col4 due-date">Prazo: {{due_date}}</div>
+					<div class="title1 col4 id" style="text-align:right !important">ID: {{call_id}}</div>
+				</div>
+
+				<div class="row div-avenida">
+					<div class="col12">
+						{{street_type}}
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col7 panel-street-name">{{street}}</div>
+					<div class="col5 div-categories">
+
+						<span class="label label-default">Iluminação Púb...</span>
+						<span class="label label-success">{{neighborhood}}</span>
+
+					</div>
+				</div>
+
+				<div class="row div-header-bottom">
+
+					<div class="col8 div-number">
+						{% if number %} Próximo ao número {{number}} {% endif %}
+					</div>
+
+					<div class="col4">
+						<div class="fb-like" data-href="{{call_object_id}}" data-width="50" data-show-faces="true" data-action="like"></div>		
+					</div>
+
+				</div>
+
+				<div class="row">
+					{% if   state=="aberto" %}
+						<div class="title3 state-open">
+					{% elif state =="fechado" %}
+						<div class="title3 state-closed">
+					{% elif state=="atrasado" %}
+						<div class="title3 state-delayed">
+					{% else %}
+						<div class="title3">
+					{% endif %}
+						{{state}}
+					</div>
+				</div>
+			</div>	
+
+			
+
+			<div class="facebook-plugins">				
+
+				<div class="fb-comments" data-href="{{call_object_id}}" data-width="600"></div>		
+			</div>
+		</div>
+
+
+	</body>
+</html>

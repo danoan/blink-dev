@@ -1,155 +1,215 @@
-<!DOCTYPE html>
+<!DOCUMENT html>
 <html>
+<head>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" href="static/css/normalize.css"></link>
+	<link rel="stylesheet" href="static/css/bootstrap.css"></link>
+	<link rel="stylesheet" href="static/css/mygs-fluid.css"></link>
+	<link rel="stylesheet" href="static/css/base.css"></link>
+	<link href="/maps/documentation/javascript/examples/default.css" rel="stylesheet">
 
-	<head>
+	<script type="text/javascript" src="static/js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="static/js/bootstrap.js"></script>
 
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width; initial-scale=1.0">
-		<link rel="stylesheet" href="{{CSS_PATH}}normalize.css"></link>
- 		<link rel="stylesheet" href="{{CSS_PATH}}mygs-fluid.css"></link> 
-		<link rel="stylesheet" href="{{CSS_PATH}}style.css"></link>
-		<script src="{{JS_PATH}}jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+	<script type="text/javascript" src="static/js/markerclusterer.js"></script>
 
-	</head>
+	<script>
+		function getFacebookData(call_id,fn_callback){
+			var url = "https://graph.facebook.com/http://blink-app.herokuapp.com/call_object/" + call_id;
 
-	<body>
-		<div class="all">
-			<div class="row block-content-format zero-block-content">
+			$.ajax({
+				type:"GET",
+				"url": url,
+				dataType:"json",
+				success:function(r){
+					fn_callback(call_id,r,"ok");
+				},
+				error:function(r){
+					fn_callback(call_id,null,"error");
+				}
+			});
 
-				<div class="extend">
-					<div class="col6 extend-left">
-						<div class="panel-links-simple">
-							<div class="block-social">
-								<a><img src="{{IMG_PATH}}twitter-bird-dark-bgs.png" height="25px" /></a>
-								<a><img src="{{IMG_PATH}}FB-f-Logo__white_58.png" height="25px" /></a>
-							</div>
-							<div class="block-apps">
-								<a><img src="{{IMG_PATH}}facebook_badge.png" height="40px" /></a>
-							</div>
-						</div>
+		}
 
-						<div class="block-logo">
-							<img src="{{IMG_PATH}}blink-logo-final-spotlight-2x1.svg" width="100%" />
-						</div>					
+		function putFacebookData(call_id,obj_json,type){
+			console.log(obj_json);
+			console.log(type);
 
-					</div>
-				
-					<div class="col6">
-						<div class="block-video">
-							<video width="100%" controls>
-	 							<source src="{{MOV_PATH}}blink_movie_2.mp4" type="video/mp4">
-							  	<source src="{{MOV_PATH}}blink_movie.wmv" type="video/wmv">
-								Your browser does not support the video tag.
-							</video>
-						</div>
-					</div>
-				</div>	
+			var like = "#like-"+call_id;
+			var comment = "#comment-"+call_id;
 
-				<div class="shrink">
-					<div class="col4 shrink-left">
-			
-						<div class="panel-links-simple">
-							<div class="block-social">
-								<a><img src="{{IMG_PATH}}twitter-bird-dark-bgs.png" height="25px" /></a>
-								<a><img src="{{IMG_PATH}}FB-f-Logo__white_58.png" height="25px" /></a>
-								<a><img src="{{IMG_PATH}}facebook_badge.png" height="25px" /></a>
-							</div>
-						</div>
+			if(type==="error"){
+				$(like).css("visibility","hidden");
+				$(comment).css("visibility","hidden");
+			}else{
+				if(obj_json.shares==undefined)
+					$( $(like) ).css("visibility","hidden");
+				else
+					$( $(like+" span") ).html(obj_json.shares);
 
-						<div class="block-logo">							
-							<img src="{{IMG_PATH}}blink-logo-final-spotlight.svg" width="100%" />
-						</div>
+				if(obj_json.comments==undefined)
+					$( $(comment) ).css("visibility","hidden");
+				else
+					$( $(comment+" span") ).html(obj_json.comments);
+			}
+		}
 
-						<div class="block-text">
-							<span>Blink é a maneira mais divertida de aprender sobre novos assuntos e conhecer gente nova. Por que assistir a video aulas chatas quando você pode trocar ideias com pessoas de verdade? Torne-se um Blinker você também!</span>
-						</div>											
+		function loadFacebookData(){
+			$(".call-card").each(function(idx){
+				getFacebookData( $(this).attr("call_id"),putFacebookData );
+			});
+		}
+	</script>
+</head>
+<body>
+	<div id="my-hero-unit" class="hero-unit">
+		<h1>1746 Maps</h1>
+		<p>1746 Maps é o portal de colaboração onde o cidadão carioca faz diferença.</p>
+	</div>
 
-						<div class="panel-links">
-							<div class="block-social">
-								<a>Watch our video</a>
-								<a><img src="{{IMG_PATH}}play-button.png" height="25px" /></a>
-								<img src="{{IMG_PATH}}separator.png" height="25px" />
-								<a><img src="{{IMG_PATH}}FB-f-Logo__white_58.png" height="25px" /></a>
-								<img src="{{IMG_PATH}}separator.png" height="25px" />
-								<a><img src="{{IMG_PATH}}twitter-bird-dark-bgs.png" height="25px" /></a>
-							</div>
-						</div>							
-
-					</div>
-				
-					<div class="col8">
-						<div class="block-video">
-							<video width="100%" controls>
-	 							<source src="{{MOV_PATH}}blink_movie_2.mp4" type="video/mp4">
-							  	<source src="{{MOV_PATH}}blink_movie.wmv" type="video/wmv">
-								Your browser does not support the video tag.
-							</video>
-						</div>
-					</div>	
-				</div>
+	<div class="well">
+		<div class="btn-toolbar view-selector-btn">
+			<div class="btn-group">
+				<button type="button" id="view-selector-map" class="btn btn-primary">Mapa</button>
+				<button type="button" id="view-selector-cards" class="btn btn-primary">Cartões</button>
 			</div>
-
-			<div class="row block-content-format first-block-content">
-				<div class="col4 need-padding">
-					<h1>Procure um assunto</h1>
-					<span>
-						Pode ser sobre fotografia, Budismo, Kart, Desenho e tudo aquilo que você puder imaginar
-					</span>
-				</div>
-				<div class="col4 need-padding">
-					<h1>Escolha seu Blinker</h1>
-					<span>
-						Compare sua confiablidade, troque mensagens, veja as suas classificações, o seu histórico de Blinks e também o quão perto está de você.
-					</span>
-				</div>
-				<div class="col4">
-					<h1>Marque o seu Blink</h1>
-					<span>
-						Pode ser em um café, parque, lanchonete, barzinho com os amigos ou qualquer outro lugar público em que você se sinta à vontade.
-					</span>							
-				</div>			
-			</div>		
-
-			<div class="row block-content-format second-block-content">
-				<div class="col6">
-					Imagem
-				</div>
-
-				<div class="col6">
-					<h1>Descubra novos interesses e talentos em você</h1>
-					<span>
-						Encontre Blinkers bem pertinho de você pelo aplicativo do Facebook e em breve pelo seu celular. Deixe-se inspirar pelos tópicos excitantes de nossos Blinkers e explore todo o seu potencial. Quem sabem você não é um novo Picasso?
-					</span>
-				</div>
-			</div>			
-
-			<div class="row block-content-format third-block-content">
-				<div class="col6">
-					<h1>Faça contatos e divulgue o seu trabalho</h1>
-					<span>
-						Crie Blinks em tópicos que você saiba tudo. Impressione os seus Blinkers e passe a ter não somente um novo amigo, mas um novo divulgador de seu trabalho!
-					</span>
-				</div>					
-
-				<div class="col6">
-					Imagem
-				</div>
-			</div>	
-
-			<div class="row block-content-format fourth-block-content">
-				<div class="col6">
-					Imagem
-				</div>
-
-				<div class="col6">
-					<h1>Conheça gente e faça novos amigos</h1>
-					<span>
-						O seu Blinker é uma pessoa que partilha do mesmo interesse que você e não há nada melhor do que isso para se iniciar uma nova amizade. 
-					</span>
-				</div>					
-			</div>								
-
 		</div>
-	</body>
 
+	</div>
+	
+
+    <script>
+		var myMap;
+
+		$.getJSON("http://localhost:5000/ws/", function(json) {
+			initialize(json)
+		});
+
+
+		function initialize(json) 
+		{
+
+			var mapOptions = 
+			{
+		  		zoom: 12,
+		    		center: new google.maps.LatLng(-22.934998,-43.237064),
+		    		mapTypeId: google.maps.MapTypeId.ROADMAP
+		  	};
+		
+		  	myMap = new google.maps.Map(document.getElementById('mapDiv'),
+		      					mapOptions);
+
+		  	setMarkers(json);
+		}
+
+		function setMarkers(markerList){
+
+			var markers = [];
+
+		  	for (i in markerList){
+		  		console.log(markerList[i]);
+				var latLng = new google.maps.LatLng(markerList[i].x, markerList[i].y);
+			  	var markerImg = new google.maps.MarkerImage('static/img/tree.png', new google.maps.Size(24, 32));
+
+			  	var marker = new google.maps.Marker({
+			  			position: latLng, 
+			  			map: myMap,
+			  			icon:markerImg,
+			  			callId: markerList[i].id
+			  			});
+
+			  	addMarkerClickListener(marker);
+
+			  	markers.push(marker);
+		  	}
+
+			var markerCluster = new MarkerClusterer(myMap, markers);	
+		}
+
+		function addMarkerClickListener(marker) {
+			google.maps.event.addListener(marker, 'click', function() {				
+				location.assign("social_panel/" + marker.callId)
+		  	});
+		}
+
+		//google.maps.event.addDomListener(window, 'load', initialize);
+
+		$(document).ready(function(){
+
+			$(".call-card").click(function(e){
+				var cid = $(e.currentTarget).attr("call_id");
+				location.assign("social_panel/" + cid);
+			});
+
+			$("#view-selector-map").click(function(e){
+				$("#cards").css({display:"none"});
+				$("#mapDiv").css({display:"block"});
+			});
+
+			$("#view-selector-cards").click(function(e){
+				$("#mapDiv").css({display:"none"});	
+				$("#cards").css({display:"block"});		
+			});
+
+			loadFacebookData();
+
+		});
+
+
+	</script>
+
+	<div class="content" id = "cards" style="display:none;">
+			{% for ob in data %}
+
+				{% if loop.index0%4==0 %}				
+					<div class="row">
+						<div id="call-list">		
+				{% endif %}
+
+				<div class="col3">
+					<div call_id="{{ob.call_id}}" class="call-card on-time-state">
+						<div class="call-card-top">
+							<div id="like-{{ob.call_id}}" class="card-support">
+								<span >42</span>
+								<img src="static/img/like.png" />
+							</div>
+							<div id="comment-{{ob.call_id}}" class="card-comment">
+								<span>12</span>
+								<img src="static/img/bubble.png" />					
+							</div>
+
+							<div class="card-category">{{ ob.category|e }}</div>
+							<div class="card-street">{{ ob.street_name }}</div>
+						</div>
+
+						{% if ob.state=="aberto" %}
+							<div class="call-card-bottom state-open">
+						{% elif ob.state=="fechado" %}
+							<div class="call-card-bottom state-closed">
+						{% elif ob.state=="atrasado" %}
+							<div class="call-card-bottom state-delayed">
+						{% else %}
+							<div class="call-card-bottom">
+						{% endif %}
+							<p>{{ob.state}}</p>
+						</div>
+					</div>
+				</div><!-- col3 -->
+
+				{% if loop.index0%4==3 %}
+						</div>
+					</div><!-- row -->
+				{% endif %}
+
+			{% endfor %}
+
+			</div>
+		</div>
+	</div>
+
+	<div id="mapDiv">
+		
+	</div>
+</body>
 </html>
