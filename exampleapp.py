@@ -84,41 +84,21 @@ def social_panel(call_id):
 	if len(bairro) > 18:
 		bairro = bairro[0:16] + "..."
 
-	rua = r["rua"]
-	rua_t = r["rua_i"]
-	if rua_t:
-		rua_t = rua_t.split(",")[-1]
-		rua = rua.split(" ")[1:]
-		rua = " ".join(rua)
-		rua_t = rua_t.strip()
-		if rua_t == "R.":
-			rua_t = "Rua"
-		if rua_t == "Av.":
-			rua_t = "Avenida"
-		if rua_t == "Trv.":
-			rua_t = "Travessa"
-		if rua_t == "Etr.":
-			rua_t = "Estrada"
-	else:
-		rua_t = None
-
 	categoria = r["categoria"]
 	if len(categoria) > 18:
 		categoria = categoria[0:16] + "..."
 
-	stateIndex = int(call_id) % 3
-
 	template_vars = {	"call_id":r["id"],
-						"open_date":aberto,
-						"due_date":fechado,
-						"call_object_id":call_object_id,
-						"category":categoria,
-						"neighborhood":bairro,
-						"street":rua,
-						"street_type": rua_t,
-						"number":r["num"],
-						"state":state[stateIndex]
-						}	
+				"open_date":aberto,
+				"due_date":fechado,
+				"call_object_id":call_object_id,
+				"category":categoria,
+				"neighborhood":bairro,
+				"street":r["rua"],
+				"street_type": r["rua_p"],
+				"number":r["num"],
+				"state":r["state"]
+				}	
 	
 	return render_template('social_panel_template.html',**template_vars)
 
