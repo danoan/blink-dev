@@ -148,8 +148,8 @@
 		</div>	
 		
 		<div class="well">
-			<div class="btn-toolbar view-selector-btn">
-				<div class="btn-group">
+			<div class="btn-toolbar">
+				<div class="btn-group view-selector-btn">
 					<button type="button" id="social-panel-back" class="btn btn-danger">Voltar</button>
 				</div>
 			</div>

@@ -72,6 +72,8 @@
 		<div class="btn-toolbar view-selector-btn">
 			<div class="btn-group">
 				<button type="button" id="view-selector-map" class="btn btn-primary">Mapa</button>
+			</div>
+			<div class="btn-group">
 				<button type="button" id="view-selector-cards" class="btn btn-primary">Cartões</button>
 			</div>
 		</div>
