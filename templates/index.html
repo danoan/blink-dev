@@ -123,7 +123,7 @@
 	</script>
 
 	<style>
-		.select-filter-input{e
+		.select-filter-input{
 			display:none;
 		}
 		.text-filter-input{
@@ -135,15 +135,21 @@
 		}
 
 		.filter-div{
-			margin-top:0px;
+			margin-top:-5px;
 			padding-top:0px;
 		}
-	
+		
+		#search-input-box{
+			height: 20px;
+		}
+
 	</style>
 </head>
 <body>
 	<div id="my-hero-unit" class="hero-unit">
-		<img id="logo" src="static/img/logo.png" style="width:20%;" />
+		<a href="#">
+			<img id="logo" src={{ url_for('static', filename='img/logo.png') }} style="width:20%;" />
+		</a>
 		<h1>1746 Maps</h1>
 		<p>1746 Maps é o portal de colaboração onde o cidadão carioca faz diferença.</p>
 	</div>
@@ -169,7 +175,7 @@
 				</div>		
 
 				<div class="input-groupinput-group-lg text-filter-input">
-					<input type="text" class="form-control input-lg" />
+					<input id="search-input-box" type="text" class="form-control input-lg" />
 				</div>						
 			</div>
 
@@ -192,10 +198,8 @@
 			initialize(json)
 		});
 
-
 		function initialize(json) 
 		{
-
 			var mapOptions = 
 			{
 		  		zoom: 12,
@@ -203,26 +207,28 @@
 		    		mapTypeId: google.maps.MapTypeId.ROADMAP
 		  	};
 		
-		  	myMap = new google.maps.Map(document.getElementById('mapDiv'),
-		      					mapOptions);
+		  	myMap = new google.maps.Map(document.getElementById('mapDiv'), mapOptions);
 
 		  	setMarkers(json);
 		}
 
-		function setMarkers(markerList){
+		function setMarkers(callList){
 
 			var markers = [];
 
-		  	for (i in markerList){
+		  	for (i in callList){
 		  		
-				var latLng = new google.maps.LatLng(markerList[i].x, markerList[i].y);
-			  	var markerImg = new google.maps.MarkerImage('static/img/tree.png', new google.maps.Size(24, 32));
+				var latLng = new google.maps.LatLng(callList[i].x, callList[i].y);
+
+				var imgUrl = getCallImageByCategory(callList[i].categoria);
+
+			  	var markerImg = new google.maps.MarkerImage(imgUrl, new google.maps.Size(35, 52));
 
 			  	var marker = new google.maps.Marker({
 			  			position: latLng, 
 			  			map: myMap,
 			  			icon:markerImg,
-			  			callId: markerList[i].id
+			  			callId: callList[i].id
 			  			});
 
 			  	addMarkerClickListener(marker);
@@ -231,6 +237,16 @@
 		  	}
 
 			var markerCluster = new MarkerClusterer(myMap, markers);	
+		}
+
+		function getCallImageByCategory(category){
+			
+			if (category == "Iluminação Pública")       return "static/img/marker_iluminacao.png";
+			if (category == "Estacionamento Irregular") return "static/img/marker_estacionamento.png";
+			if (category == "Conservação de Vias")      return "static/img/marker_vias.png";
+			if (category == "Poda de Árvores")          return "static/img/marker_poda.png";
+
+			return "static/img/tree.png";
 		}
 
 		function addMarkerClickListener(marker) {
