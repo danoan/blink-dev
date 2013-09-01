@@ -120,7 +120,8 @@
   height: 600px; }
 
 .view-selector-btn {
-  text-align: right; }
+  text-align: right;
+  margin: -3px; }
 
 .category-icon {
   float: left; }
