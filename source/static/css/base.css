@@ -120,7 +120,14 @@
   height: 600px; }
 
 .view-selector-btn {
-  float: right !important; }
+  text-align: right; }
 
 .category-icon {
   float: left; }
+
+.well {
+  background-color: #FFA340; }
+
+#my-hero-unit {
+  margin-bottom: 0;
+  background-color: #3AA6D0; }
