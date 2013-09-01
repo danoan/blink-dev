@@ -125,6 +125,8 @@
 	<style>
 		.select-filter-input{
 			display:none;
+			position: absolute;
+			margin-left: 30px !important;
 		}
 		.text-filter-input{
 			display:none;
@@ -142,6 +144,16 @@
 		#search-input-box{
 			height: 20px;
 		}
+
+		#search-input-container{
+			height: 30px;
+			position: absolute;
+			margin-left: 20px;			
+		}
+
+		#search-input-container input{
+			height: 30px;
+		}		
 
 	</style>
 </head>
@@ -174,8 +186,8 @@
 					</ul>
 				</div>		
 
-				<div class="input-groupinput-group-lg text-filter-input">
-					<input id="search-input-box" type="text" class="form-control input-lg" />
+				<div id="search-input-container" class="input-groupinput-group-lg text-filter-input">
+					<input id="search-input-box" type="text" class="form-control input-xlarge" />
 				</div>						
 			</div>
 
@@ -282,12 +294,12 @@
 	<div class="content" id = "cards" style="display:none;">
 		{% for ob in data %}
 
-			{% if loop.index0%4==0 %}				
+			{% if loop.index0%3==0 %}				
 				<div class="row">
 					<div id="call-list">		
 			{% endif %}
 
-						<div class="col3">
+						<div class="col4">
 							<div call_id="{{ob.call_id}}" class="call-card on-time-state">
 								<div class="call-card-top">
 									<div id="like-{{ob.call_id}}" class="card-support">
@@ -317,7 +329,7 @@
 							</div>
 						</div><!-- col3 -->
 
-			{% if loop.index0%4==3 %}
+			{% if loop.index0%3==2 %}
 					</div>
 				</div><!-- row -->
 			{% endif %}
