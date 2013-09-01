@@ -1,0 +1,133 @@
+.content {
+  width: 1280px;
+  margin: 0 auto; }
+
+.row {
+  margin-left: 0px !important; }
+
+#call-list {
+  height: 150px; }
+
+.on-time-state {
+  background: #ffffff;
+  /* Old browsers */
+  background: -moz-linear-gradient(top, white 0%, #eaeaea 100%);
+  /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, white), color-stop(100%, #eaeaea));
+  /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, white 0%, #eaeaea 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, white 0%, #eaeaea 100%);
+  /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, white 0%, #eaeaea 100%);
+  /* IE10+ */
+  background: linear-gradient(to bottom, white 0%, #eaeaea 100%);
+  /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='$grad-gray',GradientType=0 );
+  /* IE6-9 */ }
+
+.expired-state {
+  background: #ffffff;
+  /* Old browsers */
+  background: -moz-linear-gradient(top, white 0%, #eaeaea 100%);
+  /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, white), color-stop(100%, #eaeaea));
+  /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, white 0%, #eaeaea 100%);
+  /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, white 0%, #eaeaea 100%);
+  /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, white 0%, #eaeaea 100%);
+  /* IE10+ */
+  background: linear-gradient(to bottom, white 0%, #eaeaea 100%);
+  /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='$grad-gray',GradientType=0 );
+  /* IE6-9 */ }
+
+.state-open {
+  background-color: gray; }
+
+.state-delayed {
+  background-color: red; }
+
+.state-closed {
+  background-color: green; }
+
+.call-card {
+  width: 90%;
+  height: 128px;
+  border-radius: 5px 5px 5px 5px;
+  box-shadow: 2px 2px 5px 1px #AAA;
+  border: 1px solid black; }
+
+.call-card:hover {
+  cursor: pointer;
+  border: 2px solid #A5F; }
+
+.call-card-top {
+  position: relative;
+  font-family: "Helvetica" sans-serif;
+  height: 100px;
+  padding: 8px;
+  box-sizing: border-box;
+  border-radius: 5px 5px 0px 0px; }
+
+.card-category {
+  height: 20px;
+  width: 85%;
+  font-size: 15px; }
+
+.card-street {
+  height: 26px;
+  font-size: 28px;
+  position: relative;
+  top: 50%;
+  margin-top: -35px;
+  line-height: 28px; }
+
+.card-support {
+  position: absolute;
+  width: 25%;
+  left: 70%; }
+  .card-support img {
+    height: 15px;
+    top: -4px;
+    position: relative; }
+
+.card-comment {
+  position: absolute;
+  left: 85%; }
+  .card-comment img {
+    height: 15px;
+    top: -2px;
+    position: relative; }
+
+.call-card-bottom {
+  height: 28px;
+  border-radius: 0px 0px 5px 5px;
+  font-size: 18px;
+  text-align: center;
+  position: relative; }
+
+.call-card-bottom p {
+  padding: 5px;
+  color: white; }
+
+#mapDiv {
+  margin: 0 auto;
+  padding: 0;
+  width: 960px;
+  height: 600px; }
+
+.view-selector-btn {
+  text-align: right; }
+
+.category-icon {
+  float: left; }
+
+.well {
+  background-color: #FFA340; }
+
+#my-hero-unit {
+  margin-bottom: 0;
+  background-color: #3AA6D0; }
