@@ -72,22 +72,29 @@
 				
 			})
 
+			$("#filter-selector-cat").click(function(e){
+				filterSelect(0);
+			})
+
+			$("#filter-selector-end").click(function(e){
+				filterSelect(1);
+			})
+
 			
 		});
 
 		var filterSelected;
 		var categorySelected;
 
-		function filterSelect(id){
-			$("#filterTypeButton").html( $("#fs-"+id).html() + "<span class=\"caret\"></span>" );		
+		function filterSelect(id){	
 			if(id==0){
 				filterSelected = "category";
-				$(".select-filter-input").css("display","block");
+				$(".select-filter-input").css("display","inline");
 				$(".text-filter-input").css("display","none");
 			}else{
 				filterSelected = "street";
 				$(".select-filter-input").css("display","none");
-				$(".text-filter-input").css("display","block");
+				$(".text-filter-input").css("display","inline");
 			}
 		}
 
@@ -121,27 +128,32 @@
 		}
 		.text-filter-input{
 			display:none;
-		}		
+		}
+
+		.filter-selector{
+			margin: 0px 4px 0px 2px;	
+		}
+
+		.filter-div{
+			margin-top:0px;
+			padding-top:0px;
+		}
+	
 	</style>
 </head>
 <body>
 	<div id="my-hero-unit" class="hero-unit">
-		<img id="logo" src="static/img/logo.png" width="30%" />
+		<img id="logo" src="static/img/logo.png" style="width:20%;" />
 		<h1>1746 Maps</h1>
 		<p>1746 Maps é o portal de colaboração onde o cidadão carioca faz diferença.</p>
 	</div>
 
 	<div class="well">
 		<div class="row">
-			<div class="col9 btn-toolbar view-selector-btn" style="text-align:left">		
-				<div class="btn-group select-filter-type">
-					<button id="filterTypeButton" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					Filtrar Busca <span class="caret"></span>
-					</button>
-					<ul class="dropdown-menu" role="menu">
-						<li><a id="fs-0" href="javascript:filterSelect(0)">Por categoria</a></li>
-						<li><a id="fs-1" href="javascript:filterSelect(1)">Por Logradouro</a></li>
-					</ul>
+			<div class="col3 btn-toolbar filter-div">		
+				<div class="btn-group filter-selector">
+					<button type="button" id="filter-selector-cat" class="btn btn-primary">Categorias</button>
+					<button type="button" id="filter-selector-end" class="btn btn-primary">Endereços</button>
 				</div>
 
 				<div class="btn-group select-filter-input">
@@ -156,12 +168,12 @@
 					</ul>
 				</div>		
 
-				<div class="btn-group text-filter-input">
-					<input type="text" class="input-large" />
+				<div class="input-groupinput-group-lg text-filter-input">
+					<input type="text" class="form-control input-lg" />
 				</div>						
 			</div>
 
-			<div class="col3 btn-toolbar view-selector-btn">
+			<div class="col9 btn-toolbar view-selector-btn">
 				<div class="btn-group">
 					<button type="button" id="view-selector-map" class="btn btn-primary">Mapa</button>
 					<button type="button" id="view-selector-cards" class="btn btn-primary">Cartões</button>
@@ -227,8 +239,6 @@
 		  	});
 		}
 
-		//google.maps.event.addDomListener(window, 'load', initialize);
-
 		$(document).ready(function(){
 
 			$(".call-card").click(function(e){
@@ -254,49 +264,49 @@
 	</script>
 
 	<div class="content" id = "cards" style="display:none;">
-			{% for ob in data %}
+		{% for ob in data %}
 
-				{% if loop.index0%4==0 %}				
-					<div class="row">
-						<div id="call-list">		
-				{% endif %}
+			{% if loop.index0%4==0 %}				
+				<div class="row">
+					<div id="call-list">		
+			{% endif %}
 
-				<div class="col3">
-					<div call_id="{{ob.call_id}}" class="call-card on-time-state">
-						<div class="call-card-top">
-							<div id="like-{{ob.call_id}}" class="card-support">
-								<span >42</span>
-								<img src="static/img/like.png" />
+						<div class="col3">
+							<div call_id="{{ob.call_id}}" class="call-card on-time-state">
+								<div class="call-card-top">
+									<div id="like-{{ob.call_id}}" class="card-support">
+										<span >42</span>
+										<img src="static/img/like.png" />
+									</div>
+									<div id="comment-{{ob.call_id}}" class="card-comment">
+										<span>12</span>
+										<img src="static/img/bubble.png" />					
+									</div>
+
+									<div class="card-category">{{ ob.category|e }}</div>
+									<div class="card-street">{{ ob.street_name }}</div>
+								</div>
+
+								{% if ob.state=="aberto" %}
+									<div class="call-card-bottom state-open">
+								{% elif ob.state=="fechado" %}
+									<div class="call-card-bottom state-closed">
+								{% elif ob.state=="atrasado" %}
+									<div class="call-card-bottom state-delayed">
+								{% else %}
+									<div class="call-card-bottom">
+								{% endif %}
+									<p>{{ob.state}}</p>
+								</div>
 							</div>
-							<div id="comment-{{ob.call_id}}" class="card-comment">
-								<span>12</span>
-								<img src="static/img/bubble.png" />					
-							</div>
+						</div><!-- col3 -->
 
-							<div class="card-category">{{ ob.category|e }}</div>
-							<div class="card-street">{{ ob.street_name }}</div>
-						</div>
-
-						{% if ob.state=="aberto" %}
-							<div class="call-card-bottom state-open">
-						{% elif ob.state=="fechado" %}
-							<div class="call-card-bottom state-closed">
-						{% elif ob.state=="atrasado" %}
-							<div class="call-card-bottom state-delayed">
-						{% else %}
-							<div class="call-card-bottom">
-						{% endif %}
-							<p>{{ob.state}}</p>
-						</div>
+			{% if loop.index0%4==3 %}
 					</div>
-				</div><!-- col3 -->
+				</div><!-- row -->
+			{% endif %}
 
-				{% if loop.index0%4==3 %}
-						</div>
-					</div><!-- row -->
-				{% endif %}
-
-			{% endfor %}
+		{% endfor %}
 
 			</div>
 		</div>
