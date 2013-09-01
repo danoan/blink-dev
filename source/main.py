@@ -4,29 +4,25 @@ import os
 import json
 import random,math
 from flask import Flask, session, request, redirect, render_template, url_for
-from flaskext.mysql import MySQL
 	
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_object('conf.Config')
 
-mysql = MySQL()
-mysql.init_app(app)
-
 @app.route('/')
 def hello():
 	data = []
 
+	j = _get_db()
+
 	category = [u"Iluminação pública",u"Poda de árvore",u"Conservação de vias",u"Estacionamento irregular"]
-	street_name = [u"Machado de Assis",u"Fábio Luz",u"Pinheiro Machado",u"Campos Sales",u"Meriti"]
 	state = [u"aberto",u"fechado",u"atrasado"]
 
-	for i in range(0,10):
+	for x in j:
 		cat_id = math.trunc(random.random()*len(category))
-		str_id = math.trunc(random.random()*len(street_name))
 		st_id = math.trunc(random.random()*len(state))
 
-		call_obj = {"call_id":i,"category":category[cat_id],"reference":u"Supermercados Guanabara","call_description":u"Cidadão solicita que seu time passe a vencer no campeonato brasileiro", "street_name":street_name[str_id],"state":state[st_id]}
+		call_obj = {"call_id":x["id"],"category":category[cat_id],"reference":u"Supermercados Guanabara","call_description":u"Cidadão solicita que seu time passe a vencer no campeonato brasileiro", "street_name":x["rua"],"state":state[st_id],"x":x["x"],"y":x["y"]}
 		data.append(call_obj)
 
 	template_vars = {"data":data}
@@ -44,7 +40,7 @@ def social_panel(call_id):
 @app.route('/ws/<call_id>')
 def get_call(call_id):
 	
-	j = json.load(open("static/data/data.js"),encoding="utf-8")
+	j = _get_db()
 
 	for x in j:
 		if str(x["id"])== str(call_id):			
@@ -52,12 +48,9 @@ def get_call(call_id):
 
 	return "Nao encontrei " + call_id
 
-@app.route('/db')
-def db():
-	cursor = mysql.get_db().cursor()
-	query = ("SELECT * FROM tb_bairro limit 10;")
-	cursor.execute(query)	
-	for (id_bairro, no_bairro, fl_ativo) in cursor:
-  		print(id_bairro, fl_ativo)
-	cursor.close()
-	return "PORRA"
+@app.route('/ws/')
+def get_db():
+	return json.dumps( _get_db() )
+
+def _get_db():
+	return json.load(open("static/data/data.js"),encoding="utf-8");

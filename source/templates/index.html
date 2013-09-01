@@ -37,58 +37,41 @@
     <script>
 		var myMap;
 
-		function generateMarkerDict()
+		$.getJSON("http://localhost:5000/ws/", function(json) {
+			initialize(json)
+		});
+
+
+		function initialize(json) 
 		{
 
-			var neighborhood = [ {b:"meier",c:[-22.899185,-43.282964],r:120},
-								{b:"tijuca",c:[-22.934998,-43.237064],r:305},
-								{b:"penha",c:[-22.834889,-43.277821],r:128},
-								{b:"sao cristovao",c:[-22.896912,-43.220175],r:14},
-								{b:"centro",c:[-22.907408,-43.177141],r:154},
-								{b:"catete",c:[-22.925117,-43.179152],r:89},
-								{b:"ipanema",c:[-22.982693,-43.204472],r:53},
-								{b:"botafogo",c:[-22.951596,-43.189844],r:201},
-								{b:"barra",c:[-22.993163,-43.365837],r:171}
-							   ];
-
-			var markerDict = {};
-
-			for (var i = 0;i < neighborhood.length; i++){
-				markerDict[neighborhood[i].b] = neighborhood[i].c;
-			}
-
-			return markerDict;
-		}
-
-		function initialize() 
-		{
 			var mapOptions = 
 			{
 		  		zoom: 12,
-	    		center: new google.maps.LatLng(-22.934998,-43.237064),
-	    		mapTypeId: google.maps.MapTypeId.ROADMAP
+		    		center: new google.maps.LatLng(-22.934998,-43.237064),
+		    		mapTypeId: google.maps.MapTypeId.ROADMAP
 		  	};
 		
 		  	myMap = new google.maps.Map(document.getElementById('mapDiv'),
 		      					mapOptions);
 
-		  	setMarkers(generateMarkerDict());
+		  	setMarkers(json);
 		}
 
-		function setMarkers(markerDict){
+		function setMarkers(markerList){
 
 			var markers = [];
 
-		  	for (key in markerDict){
-		  		
-				var latLng = new google.maps.LatLng(markerDict[key][0], markerDict[key][1]);
-			  	var markerImg = new google.maps.MarkerImage('static/img/tree.png', new google.					maps.Size(24, 32));
+		  	for (i in markerList){
+		  		console.log(markerList[i]);
+				var latLng = new google.maps.LatLng(markerList[i].x, markerList[i].y);
+			  	var markerImg = new google.maps.MarkerImage('static/img/tree.png', new google.maps.Size(24, 32));
 
 			  	var marker = new google.maps.Marker({
 			  			position: latLng, 
 			  			map: myMap,
 			  			icon:markerImg,
-			  			callId: "31879314"
+			  			callId: markerList[i].id
 			  			});
 
 			  	addMarkerClickListener(marker);
@@ -105,7 +88,7 @@
 		  	});
 		}
 
-		google.maps.event.addDomListener(window, 'load', initialize);
+		//google.maps.event.addDomListener(window, 'load', initialize);
 
 		$(document).ready(function(){
 
