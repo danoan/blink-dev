@@ -9,6 +9,8 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_object('conf.Config')
 
+state = [u"aberto",u"fechado",u"atrasado"]
+
 @app.route('/')
 def hello():
 	data = []
@@ -16,13 +18,11 @@ def hello():
 	j = _get_db()
 
 	category = [u"Iluminação pública",u"Poda de árvore",u"Conservação de vias",u"Estacionamento irregular"]
-	state = [u"aberto",u"fechado",u"atrasado"]
 
 	for x in j:
 		cat_id = math.trunc(random.random()*len(category))
-		st_id = math.trunc(random.random()*len(state))
 
-		call_obj = {"call_id":x["id"],"category":category[cat_id],"reference":u"Supermercados Guanabara","call_description":u"Cidadão solicita que seu time passe a vencer no campeonato brasileiro", "street_name":x["rua"],"state":state[st_id],"x":x["x"],"y":x["y"]}
+		call_obj = {"call_id":x["id"],"category":category[cat_id],"reference":u"Supermercados Guanabara","call_description":u"Cidadão solicita que seu time passe a vencer no campeonato brasileiro", "street_name":x["rua"],"state":state[x["id"] % 3],"x":x["x"],"y":x["y"]}
 		data.append(call_obj)
 
 	template_vars = {"data":data}
@@ -33,7 +33,8 @@ def hello():
 @app.route('/social_panel/<call_id>')
 def social_panel(call_id):
 	call_object_id = "http://blink-app.herokuapp.com/call_object/" + call_id
-	template_vars = {"call_id":call_id,"open_date":"04/03/2013","due_date":"04/03/2013","call_object_id":call_object_id,"category":u"Iluminação","state":"Aguardando"}	
+	stateIndex = int(call_id) % 3
+	template_vars = {"call_id":call_id,"open_date":"04/03/2013","due_date":"04/03/2013","call_object_id":call_object_id,"category":u"Iluminação","state":state[stateIndex]}	
 	
 	return render_template('social_panel_template.html',**template_vars)
 
