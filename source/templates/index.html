@@ -71,12 +71,24 @@
 			  	var markerImg = new google.maps.MarkerImage('static/img/tree.png', new google.					maps.Size(24, 32));
 
 			  	var marker = new google.maps.Marker({
-			  			'position': latLng, 
-			  			icon:markerImg  });
+			  			position: latLng, 
+			  			map: myMap,
+			  			icon:markerImg,
+			  			callId: "31879314"
+			  			});
+
+			  	addMarkerClickListener(marker);
+
 			  	markers.push(marker);
 		  	}
 
 			var markerCluster = new MarkerClusterer(myMap, markers);	
+		}
+
+		function addMarkerClickListener(marker) {
+		  google.maps.event.addListener(marker, 'click', function() {
+		  	console.log(marker.position);
+		  });
 		}
 
 		google.maps.event.addDomListener(window, 'load', initialize);
