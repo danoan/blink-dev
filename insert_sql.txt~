@@ -1,1 +1,0 @@
-INSERT INTO access_code(type,status,extra_field,access_code) VALUES('I','N','GUSTAVO','5vG15veGGKj');

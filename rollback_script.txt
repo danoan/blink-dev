@@ -1,2 +1,0 @@
-UPDATE access_code SET status='N', used_by=null WHERE id=50;
-
