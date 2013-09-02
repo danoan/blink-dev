@@ -1,0 +1,85 @@
+{% extends "teaser_base_template.html" %}
+
+{% block head %}
+	{{ super() }}
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var ip = new InteractionPanel();
+
+			var to = new TestObject(ip);
+			var debug = false;
+
+			$(window).keydown(function(event){
+				// console.log(event.keyCode);
+				if(event.keyCode == 13) {
+					event.preventDefault();
+					return false;
+				}else if(event.keyCode == 39 ){ //LEFT
+					if(debug) to.run();
+				}				
+			});
+
+
+			$("#field-question").keydown(function(e){
+				if(e.keyCode==13){
+					ip.login();
+				}
+			});	
+
+			$(".button-container button").click(function(){ip.login();});		
+			$("#btn-try-again").click(function(){ip.fn_share();});	
+
+			$("#field-question").focus(function(){ip.fn_focus()});
+			$("#field-question").blur(function(){ip.fn_blur()});
+			$("#field-question").resize(function(){ip.fn_resize();});	
+
+			$(".suggestions-container").click(function(){
+				$("#field-question").focus();
+			});
+
+		});
+	</script>
+
+{% endblock head %}
+
+
+
+{% block main_text %}
+	<h1>Alguém te contou um segredo</h1>
+	<span>Blink é a mais nova maneira de fazer amigos e aprender coisas novas. Você é um dos primeiros a saber dessa novidade e poderá ser um dos primeiros Blinkers da nossa comunidade, basta responder a pergunta abaixo e adicionar o nosso aplicativo do Facebook.</span>
+{% endblock main_text %}
+
+
+
+{% block questions %}
+	<label id="question-label-1">
+		Qual atividade você pode compartilhar?
+	</label>
+
+	<label id="question-label-2">
+		Qual atividade você quer descobrir?
+	</label>	
+{% endblock questions %}
+
+
+
+{% block processing_text %}
+	<p>Processando...</p>
+{% endblock processing_text %}
+
+
+
+{% block thanks_text %}
+	<p>Parabéns! Você é o mais novo blinker do pedaço</p>
+	<p><span>Curta a página no Facebook e fique ligado nas novidades. Happy Blinking!<span></p>
+
+	<div class="fb-like" data-href="https://www.facebook.com/pages/Que-tal-um-Blink/453539941409736" data-width="450" data-layout="button_count" data-show-faces="true" data-send="false"></div>					
+{% endblock thanks_text %}
+
+
+
+{% block try_again_text %}
+	<p>Desculpa, não conseguimos receber a sua proposta de blink. Vamos tentar de novo?!</p>
+	<button id="btn-try-again" class="btn btn-info btn-large">Agora vai!</button>
+{% endblock try_again_text %}
