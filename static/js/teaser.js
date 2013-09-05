@@ -164,12 +164,13 @@ function ValidationPanel(){
 		}
 	}	
 
-	this.show = function(){
+	this.show = function(){		
 		$(".invalid-code").hide();
 		$(".used-code").hide();
 		$(".valid-code").hide();
 		$(".error-code").hide();
-		$("#myModal").modal( {"keyboard":true} );		
+		$("#myModal").on("shown.bs.modal",function(){$("#field-code").focus();});
+		$("#myModal").modal( {"keyboard":true} );				
 	}
 
 	this.hide = function(){
@@ -185,15 +186,17 @@ function ValidationPanel(){
 			data:{"code":code},
 			dataType:"json",
 			success:function(r){
+				// console.log(r);
 				if(r.type=="exception"){
 					that.codeIsNotValid(r);
 				}else if(r.type=="success"){
 					that.codeIsValid(r);
 				}else if(r.type=="information"){
-					that.codeIsNotValid("USED");
+					that.codeIsNotValid(r);
 				}
 			},
 			error:function(r){
+				// console.log(r);
 				that.codeError(r);
 			}
 		});
@@ -218,7 +221,7 @@ function ValidationPanel(){
 	}
 
 	this.codeIsNotValid = function(r){
-		if(r.user_data.type==="information"){
+		if(r.user_data.info==="USED"){
 			showMessage($(".used-code"));
 		}else{
 			showMessage($(".invalid-code"));

@@ -200,8 +200,8 @@ def removeRowFromId(cur,table,id_field,id_value):
 
 #Action response Package
 def ARP(pk_type,ex,user_data):
-    if pk_type==0:  #Exception
-        ex_obj = {"ex_type":ex.args[0],"ex_info":ex.args[1],"ex_obj":ex.args[2],"ex_extra":ex.args[3]}
+    if pk_type==0:  #Exception        
+        ex_obj = {"ex_type":ex.args[0],"ex_info":ex.args[1],"ex_obj":"","ex_extra":ex.args[3]}
         p = {"type":"exception","ex_obj":ex_obj,"user_data":user_data}
     elif pk_type==1:    #Success
         p = {"type":"success","ex_obj":None,"user_data":user_data}
@@ -359,7 +359,6 @@ def index():
 
 @app.route('/validate_code', methods=['POST'])
 def validate_code():
-
     try:
         code = request.form["code"]
         query = "SELECT extra_field,status FROM access_code WHERE access_code like %s"
@@ -374,7 +373,10 @@ def validate_code():
                 return ARP(TYPE_INFORMATION,None,{"info":"USED"})
             else:
                 session["user_code"] = code
-            return ARP(TYPE_SUCCESS,None,None)
+                return ARP(TYPE_SUCCESS,None,None)
+
+        ex = Exception('Validate_Code','Code does not exist',None,{})    
+        return ARP(TYPE_EXCEPTION,ex,{"info":"INVALID"})
     except (psycopg2.ProgrammingError,IndexError,Exception) as inst:
         if type(inst) is psycopg2.ProgrammingError:
             ex = Exception('Validate_Code','Table already exist or not found; SQL syntax error; Wrong number of parameter;',inst,{"1":sql % data})
