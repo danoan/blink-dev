@@ -201,6 +201,7 @@ def index_general(lang):
             paths_dict["portuguese"] = True
             return render_template("teaser_pt_br.html",**paths_dict)         
         else:
+            paths_dict["portuguese"] = False
             return render_template("teaser_en_us.html",**paths_dict)
     else:
 
