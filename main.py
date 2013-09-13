@@ -5,34 +5,33 @@ import os
 import os.path
 import urllib
 import hmac
-import json
 import hashlib
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 
 import requests
 from flask import Flask, session, request, redirect, render_template, url_for
 
+import datetime
+from database import *
+
 FB_APP_ID = os.environ.get('FACEBOOK_APP_ID')
 requests = requests.session()
+
+app = Flask(__name__)
+app.config.from_object(__name__)
+app.config.from_object('conf.Config')
 
 app_url = 'https://graph.facebook.com/{0}'.format(FB_APP_ID)
 FB_APP_NAME = json.loads(requests.get(app_url).content).get('name')
 FB_APP_SECRET = os.environ.get('FACEBOOK_SECRET')
+DB_URL = app.config["DATABASE_URL"]
 
-import psycopg2
-import urlparse
+paths_dict = {"CSS_PATH":"/static/css/", "JS_PATH":"/static/js/", "IMG_PATH":"/static/img/", "MOV_PATH":"/static/mov/"}
+locale_dict = {"af_ZA":"Afrikaans","ar_AR":"Arabic","az_AZ":"Azerbaijani","be_BY":"Belarusian","bg_BG":"Bulgarian","bn_IN":"Bengali","bs_BA":"Bosnian","ca_ES":"Catalan","cs_CZ":"Czech","cy_GB":"Welsh","da_DK":"Danish","de_DE":"German","el_GR":"Greek","en_GB":"English (UK)","en_PI":"English (Pirate)","en_UD":"English (Upside Down)","en_US":"English (US)","eo_EO":"Esperanto","es_ES":"Spanish (Spain)","es_LA":"Spanish","et_EE":"Estonian","eu_ES":"Basque","fa_IR":"Persian","fb_LT":"Leet Speak","fi_FI":"Finnish","fo_FO":"Faroese","fr_CA":"French (Canada)","fr_FR":"French (France)","fy_NL":"Frisian","ga_IE":"Irish","gl_ES":"Galician","he_IL":"Hebrew","hi_IN":"Hindi","hr_HR":"Croatian","hu_HU":"Hungarian","hy_AM":"Armenian","id_ID":"Indonesian","is_IS":"Icelandic","it_IT":"Italian","ja_JP":"Japanese","ka_GE":"Georgian","km_KH":"Khmer","ko_KR":"Korean","ku_TR":"Kurdish","la_VA":"Latin","lt_LT":"Lithuanian","lv_LV":"Latvian","mk_MK":"Macedonian","ml_IN":"Malayalam","ms_MY":"Malay","nb_NO":"Norwegian (bokmal)","ne_NP":"Nepali","nl_NL":"Dutch","nn_NO":"Norwegian (nynorsk)","pa_IN":"Punjabi","pl_PL":"Polish","ps_AF":"Pashto","pt_BR":"Portuguese (Brazil)","pt_PT":"Portuguese (Portugal)","ro_RO":"Romanian","ru_RU":"Russian","sk_SK":"Slovak","sl_SI":"Slovenian","sq_AL":"Albanian","sr_RS":"Serbian","sv_SE":"Swedish","sw_KE":"Swahili","ta_IN":"Tamil","te_IN":"Telugu","th_TH":"Thai","tl_PH":"Filipino","tr_TR":"Turkish","uk_UA":"Ukrainian","vi_VN":"Vietnamese","zh_CN":"Simplified Chinese (China)","zh_HK":"Traditional Chinese (Hong Kong)","zh_TW":"Traditional Chinese (Taiwan)"}
 
-def connect_database():
-    urlparse.uses_netloc.append("postgres")
-    url = urlparse.urlparse(os.environ["DATABASE_URL"])
-
-    return psycopg2.connect(
-        database=url.path[1:],
-        user=url.username,
-        password=url.password,
-        host=url.hostname,
-        port=url.port
-    )    
+TYPE_EXCEPTION = 0
+TYPE_SUCCESS = 1
+TYPE_INFORMATION = 2
 
 def oauth_login_url(preserve_path=True, next_url=None):
     fb_login_uri = ("https://www.facebook.com/dialog/oauth"
@@ -121,16 +120,8 @@ def fb_call(call, args=None):
     r = requests.get(url, params=args)
     return json.loads(r.content)
 
-
-
-app = Flask(__name__)
-app.config.from_object(__name__)
-app.config.from_object('conf.Config')
-app.secret_key = "d5X2=!T774/=$z#(c@K3"
-
 def get_home():
     return 'https://' + request.host + '/'
-
 
 def get_token():
 
@@ -173,145 +164,48 @@ def get_token():
 
         return token
 
-import datetime
-paths_dict = {"CSS_PATH":"static/css/", "JS_PATH":"static/js/", "IMG_PATH":"static/img/", "MOV_PATH":"static/mov/"}
-locale_dict = {"af_ZA":"Afrikaans","ar_AR":"Arabic","az_AZ":"Azerbaijani","be_BY":"Belarusian","bg_BG":"Bulgarian","bn_IN":"Bengali","bs_BA":"Bosnian","ca_ES":"Catalan","cs_CZ":"Czech","cy_GB":"Welsh","da_DK":"Danish","de_DE":"German","el_GR":"Greek","en_GB":"English (UK)","en_PI":"English (Pirate)","en_UD":"English (Upside Down)","en_US":"English (US)","eo_EO":"Esperanto","es_ES":"Spanish (Spain)","es_LA":"Spanish","et_EE":"Estonian","eu_ES":"Basque","fa_IR":"Persian","fb_LT":"Leet Speak","fi_FI":"Finnish","fo_FO":"Faroese","fr_CA":"French (Canada)","fr_FR":"French (France)","fy_NL":"Frisian","ga_IE":"Irish","gl_ES":"Galician","he_IL":"Hebrew","hi_IN":"Hindi","hr_HR":"Croatian","hu_HU":"Hungarian","hy_AM":"Armenian","id_ID":"Indonesian","is_IS":"Icelandic","it_IT":"Italian","ja_JP":"Japanese","ka_GE":"Georgian","km_KH":"Khmer","ko_KR":"Korean","ku_TR":"Kurdish","la_VA":"Latin","lt_LT":"Lithuanian","lv_LV":"Latvian","mk_MK":"Macedonian","ml_IN":"Malayalam","ms_MY":"Malay","nb_NO":"Norwegian (bokmal)","ne_NP":"Nepali","nl_NL":"Dutch","nn_NO":"Norwegian (nynorsk)","pa_IN":"Punjabi","pl_PL":"Polish","ps_AF":"Pashto","pt_BR":"Portuguese (Brazil)","pt_PT":"Portuguese (Portugal)","ro_RO":"Romanian","ru_RU":"Russian","sk_SK":"Slovak","sl_SI":"Slovenian","sq_AL":"Albanian","sr_RS":"Serbian","sv_SE":"Swedish","sw_KE":"Swahili","ta_IN":"Tamil","te_IN":"Telugu","th_TH":"Thai","tl_PH":"Filipino","tr_TR":"Turkish","uk_UA":"Ukrainian","vi_VN":"Vietnamese","zh_CN":"Simplified Chinese (China)","zh_HK":"Traditional Chinese (Hong Kong)","zh_TW":"Traditional Chinese (Taiwan)"}
-
-TYPE_EXCEPTION = 0
-TYPE_SUCCESS = 1
-TYPE_INFORMATION = 2
-
-class BlinkException(Exception):
-    pass
-
-def removeRowFromId(cur,table,id_field,id_value):
-    sql = "DELETE FROM " + table + " WHERE " + id_field + "=%s"
-    data = (id_value,)
-
-    try:
-        cur.execute(sql,data)
-    except (psycopg2.ProgrammingError,IndexError,Exception) as ex:
-        if type(ex) is psycopg2.ProgrammingError:
-            raise BlinkException('removeRow','Table already exist or not found; SQL syntax error; Wrong number of parameter;',ex,{"1":table})
-        elif type(ex) is IndexError:
-            raise BlinkException('removeRow','Cursor out of bounds.',ex,{"1":table})
-        else:
-            raise BlinkException('removeRow','Not Identified. Mysterious Error',ex,{"1":table})
-
-#Action response Package
-def ARP(pk_type,ex,user_data):
-    if pk_type==0:  #Exception        
-        ex_obj = {"ex_type":ex.args[0],"ex_info":ex.args[1],"ex_obj":"","ex_extra":ex.args[3]}
-        p = {"type":"exception","ex_obj":ex_obj,"user_data":user_data}
-    elif pk_type==1:    #Success
-        p = {"type":"success","ex_obj":None,"user_data":user_data}
-    elif pk_type==2:    #Information
-        p = {"type":"information","ex_obj":None,"user_data":user_data}    
-
-    return json.dumps(p)
-
-def insert_user(cur,**a):
-    # conn = connect_database()
-    # cur = conn.cursor();
-
-    try:
-        sql = "SELECT id FROM users WHERE fbid=%s"    
-        cur.execute( sql,(a["fbid"],) )        
-
-        if cur.rowcount==0:
-            sql = "INSERT INTO users(name,age,city,country,location,gender,fbid,rating) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNING id"
-            data = (a["name"],a["age"],a["city"],a["language"],a["gps_location"],a["gender"],a["fbid"],a["rating"])
-
-            cur.execute(sql,data)
-            user_id = cur.fetchone()[0]            
-        else:
-            user_id = cur.fetchone()[0]
-    except (psycopg2.ProgrammingError,IndexError,Exception) as inst:
-        if type(inst) is psycopg2.ProgrammingError:
-            raise BlinkException('Insert_User','Table already exist or not found; SQL syntax error; Wrong number of parameter;',inst,{"1":sql % data})
-        elif type(inst) is IndexError:
-            raise BlinkException('Insert_User','Cursor is out of bounds',inst,{});
-        else:
-            raise BlinkException('Insert_User','Not Identified. Mysterious Error',inst,{})
-
-    return user_id
-
-def insert_question(cur,**a):
-    # conn = connect_database()
-    # cur = conn.cursor();
-
-    try:
-        sql = "INSERT INTO activities(name,keywords) VALUES(%s,%s) RETURNING id"
-        data = (a["question"],a["keywords"])    
-
-        cur.execute(sql,data)
-        return cur.fetchone()[0]    
-    except (psycopg2.ProgrammingError,IndexError,Exception) as inst:
-        if type(inst) is psycopg2.ProgrammingError:
-            raise BlinkException('Insert_Question','Table already exist or not found; SQL syntax error; Wrong number of parameter;',inst,{"1":sql % data})
-        elif type(inst) is IndexError:
-            raise BlinkException('Insert_Question','Cursor is out of bounds',inst,{});
-        else:
-            raise BlinkException('Insert_Question','Not Identified. Mysterious Error',inst,{})
-    
-
-def insert_request(cur,**a):
-    try:
-        sql = "INSERT INTO requests(activity_id,type,user_id,status) VALUES(%s,%s,%s,%s) RETURNING id"
-        data = (a["activity_id"],a["request_type"],a["user_id"],a["status"])
-
-        cur.execute(sql,data)
-        return cur.fetchone()[0]
-    except:
-        if type(inst) is psycopg2.ProgrammingError:
-            raise BlinkException('Insert_Request','Table already exist or not found; SQL syntax error; Wrong number of parameter;',inst,{"1":sql % data})
-        elif type(inst) is IndexError:
-            raise BlinkException('Insert_Request','Cursor is out of bounds',inst,{});
-        else:
-            raise BlinkException('Insert_Request','Not Identified. Mysterious Error',inst,{}) 
-
-def insert_international_by_code(cur,**a):
-
-    try:
-        sql_0 = "SELECT blinker_id FROM international_users WHERE blinker_id=%s"
-        data_0 = (a["blinker_id"],)
-
-        cur.execute(sql_0,data_0)
-        if cur.rowcount>0:
-            return "EXIST"
-
-        sql_1 = "UPDATE access_code SET used_by=%s, status='U' WHERE access_code=%s"
-        data_1 = (a["blinker_id"],a["user_code"])
-
-        sql_2 = "INSERT INTO international_users (blinker_id,document_1_id,document_2_id,contact_1_id,contact_2_id,status) VALUES (%s,%s,%s,%s,%s,%s)"
-        data_2 = (a["blinker_id"],a["document_1_id"],a["document_2_id"],a["contact_1_id"],a["contact_2_id"],a["status"])
-        
-        cur.execute(sql_1,data_1)
-        cur.execute(sql_2,data_2)
-
-        return "OK"
-    except (psycopg2.ProgrammingError,IndexError,Exception) as inst:
-        if type(inst) is psycopg2.ProgrammingError:
-            raise BlinkException('Insert_Request','Table already exist or not found; SQL syntax error; Wrong number of parameter;',inst,{"1":sql % data})
-        elif type(inst) is IndexError:
-            raise BlinkException('Insert_Request','Cursor is out of bounds',inst,{});
-        else:
-            raise inst
-
-@app.route('/', methods=['GET', 'POST'])
-def index():
+@app.route('/main',methods=['GET'])
+@app.route('/teaser',methods=['GET'])
+@app.route('/blog',methods=['GET'])
+@app.route('/',methods=['GET'])
+def set_language():
     hd_lang = request.headers["Accept-Language"]
-    hd_lang = hd_lang.split(",")[0];
+    hd_lang = hd_lang.split(",")[0]; 
 
+    path = request.path
+    if len(path)==1:
+        path = ""
+
+    if hd_lang=="pt":
+        return redirect("pt" + path)
+    else:
+        return redirect("en" + path)
+
+@app.route('/<lang>/blog', methods=['GET'])
+@app.route('/<lang>/blog/<page>', methods=['GET'])
+def blog(lang,page=None):
+    if page is None:
+        page = "blog"
+
+    if lang=="pt":
+        page = "%s_pt.html" % (page)
+    else:
+        page = "%s_en.html" % (page)
+
+    return render_template(page,**paths_dict)
+
+@app.route('/<lang>', methods=['GET','POST'])
+def index_general(lang):       
     if request.method == 'GET':
-        if hd_lang=="pt-BR":
+        if lang=="pt":
             paths_dict["portuguese"] = True
-            return render_template("teaser_pt_br.html",**paths_dict)
+            return render_template("teaser_pt_br.html",**paths_dict)         
         else:
             return render_template("teaser_en_us.html",**paths_dict)
     else:
+
         try:
-            conn = connect_database()
+            conn = connect_database(DB_URL)
             cur = conn.cursor()
 
             #User insert information processing
@@ -363,7 +257,7 @@ def validate_code():
         code = request.form["code"]
         query = "SELECT extra_field,status FROM access_code WHERE access_code like %s"
 
-        conn = connect_database()
+        conn = connect_database(DB_URL)
         cur = conn.cursor();
 
         cur.execute(query,(code,))
@@ -393,8 +287,9 @@ def validate_code():
 
 @app.route('/rollback', methods=['POST'])
 def rollback():
+    return "OK"
     try:
-        conn = connect_database()
+        conn = connect_database(DB_URL)
         cur = conn.cursor()
 
         rb_obj = request.form["rollbackObj"]    #It is a list of dictionaries
@@ -411,16 +306,6 @@ def rollback():
         conn.close()
 
     return "OK"
-
-@app.route('/call_object/<call_id>')
-def call_object(call_id):
-    template_vars = {"call_title":"Chamado " + call_id, "call_object_id":call_id}
-    return render_template('call_object_template.html',**template_vars)
-
-
-@app.route('/blog', methods=['GET'])
-def blog():
-    return render_template("blog.html",CSS_PATH="static/css/", JS_PATH="static/js/", IMG_PATH="static/img/", MOV_PATH="static/mov/")
 
 
 if __name__ == '__main__':
