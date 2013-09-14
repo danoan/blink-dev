@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="{% block lang %}{% endblock %}">
-<head>
-{% block head %}
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width; initial-scale=1.0">
+{% extends "base.html" %}
 
-	<link rel="stylesheet" href="{{CSS_PATH}}normalize.css"></link>
+{% block head %}
+	{{ super() }}
+	
+	<link rel="stylesheet" href="{{CSS_PATH}}bootstrap.css"></link>	
 	<link rel="stylesheet" href="{{CSS_PATH}}mygs-fluid.css"></link> 
-	<link rel="stylesheet" href="{{CSS_PATH}}bootstrap.css"></link>
-	<link rel="stylesheet" href="{{CSS_PATH}}teaser.css"></link>
+	<link rel="stylesheet" href="{{CSS_PATH}}teaser.css"></link>	
 
 	{% if DEBUG %}
 	<script src="{{JS_PATH}}teaser_test.js"></script>
@@ -40,9 +37,9 @@
 	</script>
 
 {% endblock head %}
-</head>
-<body>
-	{% block body %}
+
+{% block body %}
+	{{ super() }}
 	<div id="fb-root"></div>
 		<script>
 		  // 507371419342913
@@ -175,6 +172,4 @@
 			</div>
 
 		</div>
-	{% endblock body %}		
-</body>
-</html>
+{% endblock body %}		
