@@ -24,9 +24,11 @@ app.config.from_object('conf.Config')
 app_url = 'https://graph.facebook.com/{0}'.format(FB_APP_ID)
 FB_APP_NAME = json.loads(requests.get(app_url).content).get('name')
 FB_APP_SECRET = os.environ.get('FACEBOOK_SECRET')
-DB_URL = app.config["DATABASE_URL"]
 
-paths_dict = {"CSS_PATH":"/static/css/", "JS_PATH":"/static/js/", "IMG_PATH":"/static/img/", "MOV_PATH":"/static/mov/"}
+DB_URL = app.config["DATABASE_URL"]
+DEBUG = app.config["DEBUG"]
+
+paths_dict = {"CSS_PATH":"/static/css/", "JS_PATH":"/static/js/", "IMG_PATH":"/static/img/", "MOV_PATH":"/static/mov/", "DEBUG":DEBUG}
 locale_dict = {"af_ZA":"Afrikaans","ar_AR":"Arabic","az_AZ":"Azerbaijani","be_BY":"Belarusian","bg_BG":"Bulgarian","bn_IN":"Bengali","bs_BA":"Bosnian","ca_ES":"Catalan","cs_CZ":"Czech","cy_GB":"Welsh","da_DK":"Danish","de_DE":"German","el_GR":"Greek","en_GB":"English (UK)","en_PI":"English (Pirate)","en_UD":"English (Upside Down)","en_US":"English (US)","eo_EO":"Esperanto","es_ES":"Spanish (Spain)","es_LA":"Spanish","et_EE":"Estonian","eu_ES":"Basque","fa_IR":"Persian","fb_LT":"Leet Speak","fi_FI":"Finnish","fo_FO":"Faroese","fr_CA":"French (Canada)","fr_FR":"French (France)","fy_NL":"Frisian","ga_IE":"Irish","gl_ES":"Galician","he_IL":"Hebrew","hi_IN":"Hindi","hr_HR":"Croatian","hu_HU":"Hungarian","hy_AM":"Armenian","id_ID":"Indonesian","is_IS":"Icelandic","it_IT":"Italian","ja_JP":"Japanese","ka_GE":"Georgian","km_KH":"Khmer","ko_KR":"Korean","ku_TR":"Kurdish","la_VA":"Latin","lt_LT":"Lithuanian","lv_LV":"Latvian","mk_MK":"Macedonian","ml_IN":"Malayalam","ms_MY":"Malay","nb_NO":"Norwegian (bokmal)","ne_NP":"Nepali","nl_NL":"Dutch","nn_NO":"Norwegian (nynorsk)","pa_IN":"Punjabi","pl_PL":"Polish","ps_AF":"Pashto","pt_BR":"Portuguese (Brazil)","pt_PT":"Portuguese (Portugal)","ro_RO":"Romanian","ru_RU":"Russian","sk_SK":"Slovak","sl_SI":"Slovenian","sq_AL":"Albanian","sr_RS":"Serbian","sv_SE":"Swedish","sw_KE":"Swahili","ta_IN":"Tamil","te_IN":"Telugu","th_TH":"Thai","tl_PH":"Filipino","tr_TR":"Turkish","uk_UA":"Ukrainian","vi_VN":"Vietnamese","zh_CN":"Simplified Chinese (China)","zh_HK":"Traditional Chinese (Hong Kong)","zh_TW":"Traditional Chinese (Taiwan)"}
 
 TYPE_EXCEPTION = 0
@@ -218,6 +220,7 @@ def index_general(lang):
             if city is None:
                 city = "None";            
 
+
             birthday_list = request.form["field-birthday"].split("/")    
             birthday = datetime.datetime(int(birthday_list[2]),int(birthday_list[0]),int(birthday_list[1]))                       
             age = (datetime.datetime.now() - birthday).days/365
@@ -233,10 +236,10 @@ def index_general(lang):
         
             conn.commit()
 
-            t1 = {"table":"requests","id_field":"id","id_value":request_id}
-            t2 = {"table":"activities","id_field":"id","id_value":activity_id}
-            # t3 = {"table":"users","id_field":"id","id_value":user_id}            
-            t4 = {"table":"international_users","id_field":"blinker_id","id_value":user_id}
+            t1 = {"table":"request","id_field":"id","id_value":request_id}
+            t2 = {"table":"activity","id_field":"id","id_value":activity_id}
+            # t3 = {"table":"user","id_field":"id","id_value":user_id}            
+            t4 = {"table":"international_blinker","id_field":"blinker_id","id_value":user_id}
             l = [t1,t2,t4]
             user_data = {"test_data":l}
             
@@ -288,7 +291,9 @@ def validate_code():
 
 @app.route('/rollback', methods=['POST'])
 def rollback():
-    return "OK"
+    if not DEBUG:
+        return "OK"
+
     try:
         conn = connect_database(DB_URL)
         cur = conn.cursor()

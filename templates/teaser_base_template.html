@@ -10,6 +10,9 @@
 	<link rel="stylesheet" href="{{CSS_PATH}}bootstrap.css"></link>
 	<link rel="stylesheet" href="{{CSS_PATH}}teaser.css"></link>
 
+	{% if DEBUG %}
+	<script src="{{JS_PATH}}teaser_test.js"></script>
+	{% endif %}
 	<script src="{{JS_PATH}}teaser.js"></script>
 	<script src="{{JS_PATH}}jquery-1.8.2.min.js"></script>	
 	<script src="{{JS_PATH}}bootstrap.js"></script>	
@@ -38,12 +41,24 @@
 		  //blink-app.herokuapp.com/
 		  window.fbAsyncInit = function() {
 		    // init the FB JS SDK
+
+		    {% if DEBUG %}
+		    FB.init({
+		      appId      : '507371419342913',
+		      channelUrl : '//localhost:5000/', 
+		      status     : true,               
+		      xfbml      : true          
+		    });
+
+		    {% else %}
+
 		    FB.init({
 		      appId      : '1408547952691251',
 		      channelUrl : '//blink-app.herokuapp.com/', 
 		      status     : true,               
 		      xfbml      : true          
 		    });
+		    {% endif %}
 
 		    // Additional initialization code such as adding Event Listeners goes here
 		  };
