@@ -178,7 +178,7 @@ def set_language():
     if len(path)==1:
         path = ""
 
-    if hd_lang=="pt":
+    if hd_lang.find("pt")>=0:
         return redirect("pt" + path)
     else:
         return redirect("en" + path)
