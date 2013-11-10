@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block head %}
+	{{super()}}
+	<link rel="stylesheet" href="{{CSS_PATH}}bootstrap.css"></link>	
+	<link rel="stylesheet" href="{{CSS_PATH}}mygs-fluid.css"></link> 
+	<link rel="stylesheet" href="{{CSS_PATH}}app.css"></link>	
+
+	{% if DEBUG %}
+	
+	{% endif %}
+	<script src="{{JS_PATH}}app.js"></script>
+	<script src="{{JS_PATH}}jquery-1.8.2.min.js"></script>	
+	<script src="{{JS_PATH}}bootstrap.js"></script>	
+{% endblock head %}
+
+{% block body %}
+	{{super()}}
+
+	<div class="all">
+		<div class="header">
+			<div class="row">
+				<div class="col2 logo-box">
+					<div class="logo">
+						<img src="{{IMG_PATH}}blink-logo-final.png">
+					</div>
+				</div>
+
+				<div class="col10 header-tools">
+					<div class="row user-box">
+						<div class="col8 user-stats">
+							<img />
+							<span>Rating</span>
+							<span>Moedinhas</span>
+						</div>
+						<div class="col4 user-buttons">
+							<div class="col6">
+								<button type="button" class="btn btn-success">Online</button>
+							</div>
+							<div class="col6">
+								<button type="button" class="btn btn-warning">Settings</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="row search-box">
+						<div class="col10 search-input">
+							<input type="text" />
+						</div>
+						<div class="col2 search-button">
+							<button type="button" class="btn btn-info btn-large">Ok</button>
+						</div>
+					</div>	
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock body %}
+

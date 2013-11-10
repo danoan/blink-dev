@@ -1,0 +1,60 @@
+body {
+  background-color: green; }
+
+.row {
+  margin-left: 0px; }
+
+.all {
+  width: 800px;
+  height: 600px;
+  margin: 0 auto;
+  margin-top: 2em;
+  background-color: white; }
+
+.header {
+  /*background-color: red;	*/
+  padding: 0.64em 1.28em;
+  box-sizing: border-box; }
+
+.logo-box {
+  /*background-color: orange;*/
+  height: 120px;
+  position: relative; }
+  .logo-box .logo {
+    position: absolute;
+    bottom: 0px;
+    width: 130px; }
+
+.header-tools {
+  /*background-color: yellow;*/
+  padding-left: 1.28em; }
+
+.user-box {
+  height: 80px; }
+
+.user-stats {
+  /*background-color: purple;*/ }
+  .user-stats img {
+    width: 40px;
+    height: 40px; }
+
+.user-buttons {
+  /*background-color: pink;*/
+  text-align: right; }
+
+.search-box {
+  height: 40px; }
+
+.search-input {
+  /*background-color: brown;*/ }
+  .search-input input {
+    width: 97%;
+    height: 30px;
+    margin: 0px; }
+
+.search-button {
+  /*background-color: gray;*/
+  text-align: right; }
+  .search-button button {
+    height: 40px;
+    width: 78px; }

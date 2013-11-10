@@ -138,9 +138,8 @@ body {
   100% {
     background-color: #047091; } }
 
-.modal{
-  background-color: #8dc640 !important;  
-}
+.modal {
+  background-color: #8dc640 !important; }
 
 .modal-body {
   text-align: center; }

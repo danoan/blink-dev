@@ -169,6 +169,7 @@ def get_token():
 @app.route('/main',methods=['GET'])
 @app.route('/teaser',methods=['GET'])
 @app.route('/blog',methods=['GET'])
+@app.route('/app',methods=['GET'])
 @app.route('/',methods=['GET'])
 def set_language():
     hd_lang = request.headers["Accept-Language"]
@@ -195,6 +196,20 @@ def blog(lang,page=None):
         page = "%s_en.html" % (page)
 
     return render_template(page,**paths_dict)
+
+@app.route('/<lang>/app', methods=['GET'])
+@app.route('/<lang>/app/<page>', methods=['GET'])    
+def app_main(lang,page=None):
+    if page is None:
+        page = "app"
+
+    if lang=="pt":
+        page = "%s_pt.html" % (page)
+    else:
+        page = "%s_en.html" % (page)
+
+    return render_template(page,**paths_dict)
+
 
 @app.route('/<lang>', methods=['GET','POST'])
 def index_general(lang):       
