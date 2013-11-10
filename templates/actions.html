@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block lang %}pt-br{% endblock lang %}
+
+{% block head %}
+	<link rel="stylesheet" href="{{CSS_PATH}}bootstrap.css"></link>	
+	<link rel="stylesheet" href="{{CSS_PATH}}mygs-fluid.css"></link>
+
+	<script src="{{JS_PATH}}jquery-1.8.2.min.js"></script>	
+	<script src="{{JS_PATH}}teaser.js"></script>	
+
+	<style>
+		.row{margin:0px;}
+		.action-content{
+			padding-top:1em;
+			width: 840px;
+			height: 460px;
+
+			margin: 0 auto;
+		}
+		.action-panel{
+			border: 1px solid black;
+			height: 200px;
+			
+		}
+		.output-panel{
+			border: 1px solid black;
+			height: 200px;
+			font-family: "Courier-New";
+			font-size: 11px;
+			line-height: 1.32em;
+		}
+		.output-item{
+			padding: 0.64em;
+		}
+		.success{color:green;}
+		.error{color:red;}
+		.output-item span{
+			font-weight: bold;
+			margin-right: 0.64em;
+		}
+		.render-output-panel{
+			border: 1px solid black;
+			height: 260px;	
+		}
+		.output-item{
+			padding: 0.64em;
+			font-family: "Courier-New";
+			font-size: 11px;
+			color: blue;			
+		}
+	</style>
+
+	<script>
+		function createOutputItem(title,content,type){
+			var oi = document.createElement("div");
+			$(oi).attr({"class":"output-item"});
+			var oi_title = document.createElement("span");
+			$(oi_title).html(title)
+			if(type==="E"){
+				$(oi_title).addClass("error");
+			}else{
+				$(oi_title).addClass("success");
+			}			
+			oi.appendChild(oi_title);
+			oi.appendChild(document.createTextNode(content));
+
+			$(".output-panel")[0].appendChild(oi);
+		}
+
+		function createRenderOutputItem(type,req){
+			var outItem = document.createElement("div");
+			$(outItem).addClass("output-item");
+
+			if(type==="ask_for_blink"){
+				var content = "Process for blink meetup created with id " + req.user_data.blink_id.toString();
+				outItem.appendChild(document.createTextNode(content));
+			}else if(type==="create_request"){
+				var bl = req.user_data.blinker_id.toString();
+				var ac = req.user_data.activity_id.toString();
+				var ac_name = req.user_data.activity_name.toString();
+				var rid = req.user_data.request_id.toString();
+
+				var content = "Blinker " + bl + " has requested " + ac_name + " of id " + ac + " with requestId equals to " + rid;
+				outItem.appendChild(document.createTextNode(content));
+			}else if(type==="accept_blink"){
+				var content = "Blink of id " + req.user_data.blink_id " has changed status to accepted"
+				outItem.appendChild(document.createTextNode(content));			
+			}
+
+			$(".render-output-panel")[0].appendChild(outItem);
+		}
+
+		/*An user already offers the blink, and the blinker will ask for this
+		blink to the blinker_master*/
+		function askForBlink(bm,bl,ac){
+			var that = CallTest({});	
+			var formData = {
+				"blinker_master":bm,
+				"blinker":bl,
+				"activity":ac
+			};
+
+			var fn_success = function(r){
+				createOutputItem("Ask For",JSON.stringify(r),"S");
+				createRenderOutputItem("ask_for_blink",r);
+			}
+
+			var fn_error = function(r){
+				createOutputItem("Ask For",JSON.stringify(r),"E");
+			}
+
+			that.serverRequest("POST",formData,"app/action/ask_for_blink",fn_success,fn_error)	
+		}
+
+		function createRequest(ac,rt,bl){
+			var that = CallTest({})
+			var formData = {
+				"activity":ac,
+				"request_type":rt,
+				"blinker_id":bl
+			}
+
+			var fn_success = function(r){
+				createOutputItem("Create Request",JSON.stringify(r),"S");
+				createRenderOutputItem("create_request",r);
+			}
+
+			var fn_error = function(r){
+				createOutputItem("Create Request",JSON.stringify(r),"E");
+			}			
+
+			that.serverRequest("POST",formData,"app/action/create_request",fn_success,fn_error)				
+		}
+
+		function acceptBlink(bl){
+			var that = CallTest({})
+			var formData = {
+				"blink_id":bl
+			}
+
+			var fn_success = function(r){
+				createOutputItem("Accept Blink",JSON.stringify(r),"S");
+				createRenderOutputItem("accept_blink",r);
+			}
+
+			var fn_error = function(r){
+				createOutputItem("Accept Blink",JSON.stringify(r),"E");
+			}			
+
+			that.serverRequest("POST",formData,"app/action/accept_blink",fn_success,fn_error)				
+		}		
+
+		$(document).ready(function(){
+			$("#btn-action-ask-for").click(function(){
+				askForBlink(31,16,11);
+			});
+			$("#btn-action-create-request").click(function(){
+				createRequest("SlackLine Practicing",0,31);
+			});			
+			$("#btn-action-accept-blink").click(function(){
+				createRequest(9);
+			});						
+		});
+	</script>
+{% endblock head %}
+
+{% block body %}
+	<div class="action-content">
+		<div class="row">
+
+			<div class="col6 action-panel">
+				<button id="btn-action-ask-for" class="btn btn-info">Ask for Blink</button>
+
+				<button id="btn-action-create-request" class="btn btn-info">Create Request</button>				
+			</div>
+
+			<div class="col6 output-panel">
+
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col12 render-output-panel">
+
+			</div>
+		</div>
+	</div>
+{% endblock body %}
