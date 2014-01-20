@@ -50,6 +50,9 @@ function SuggestionsPanel(divPanel,suggestions){
 	this.start();				
 }
 
+/*
+Classes who inherits this one are Testable
+*/
 var CallTest = function(spec){
 	var serverRequest =	function(method,formData,url,fn_success,fn_error,callback){
 		$.ajax({
@@ -85,7 +88,11 @@ var CallTest = function(spec){
 }
 
 var ValidationPanel = function(){
-	var that = CallTest({test_callback:null});	
+	if(debug_flag){
+		var that = CallTest({testObject:new BaseTestObject()});	
+	}else{
+		var that = CallTest({});	
+	}	
 
 	var curPanel = null;
 	var showMessage = function(panel,fade,afterFade_fn){
@@ -129,7 +136,7 @@ var ValidationPanel = function(){
 		showMessage($("#myModal .loading-container"),false);
 
 		var fn_success = function(r){
-			// console.log(r);
+			console.log(r);
 			if(r.type=="exception"){
 				that.codeIsNotValid(r);
 			}else if(r.type=="success"){
@@ -177,7 +184,7 @@ var ValidationPanel = function(){
 
 var InteractionPanel=function(suggestions){
 	if(debug_flag){
-		var that = CallTest({testObject:new IPTestObject()});	
+		var that = CallTest({testObject:new BaseTestObject()});	
 	}else{
 		var that = CallTest({});	
 	}	

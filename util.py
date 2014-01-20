@@ -3,6 +3,7 @@
 import json
 import psycopg2
 import urlparse
+import datetime
 
 class BlinkException(Exception):
     pass
@@ -19,6 +20,7 @@ class Util(object):
     TYPE_INFORMATION = 2
 
     #Action response Package
+    @staticmethod
     def ARP(pk_type,ex,user_data):
         if pk_type==0:  #Exception        
             ex_obj = {"ex_type":ex.args[0],"ex_info":ex.args[1],"ex_msg":ex.args[2],"ex_extra":ex.args[3]}
@@ -30,6 +32,7 @@ class Util(object):
 
         return json.dumps(p)       
 
+    @staticmethod
     def get_age_from_facebook_date(birthday):
         try:
             birthday_list = birthday.split("/")    
@@ -48,10 +51,11 @@ class Util(object):
             except ValueError:
                 return None
 
+    @staticmethod
     def get_db_date_format(date):
         try:
             date = date.split("/")
-            return "%s/%s/%s" % (date[2],date[0],date[1])
+            return datetime.date(date[2],date[0],date[1])
         except Exception:
             return None
 

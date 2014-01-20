@@ -6,6 +6,8 @@ from util import Database as db
 from models import *
 from conf import Config
 
+#ContactModel Test
+
 class CMBaseTest(unittest.TestCase):
 	def setUp(self):
 		self.conn = db.connect_database(Config.DATABASE_URL)
@@ -71,6 +73,8 @@ def run_CM_test_suite():
 	runner.run(suite)
 
 
+#DocumentModel Test
+
 class DMBaseTest(unittest.TestCase):
 	def setUp(self):
 		self.conn = db.connect_database(Config.DATABASE_URL)
@@ -135,6 +139,8 @@ def run_DM_test_suite():
 	runner = unittest.TextTestRunner()
 	runner.run(suite)	
 
+
+#BlinkModel Test
 
 class BMBaseTest(unittest.TestCase):
 	def setUp(self):
@@ -241,6 +247,104 @@ def run_BM_test_suite():
 		conn.commit()
 		cur.close()
 		conn.close()
+
+
+#BlinkerModel
+
+class BKRBaseTest(unittest.TestCase):
+	def setUp(self):
+		self.conn = db.connect_database(Config.DATABASE_URL)
+		self.cur = self.conn.cursor()
+		self.bkr = BlinkerModel("Mr. Capoeira",datetime.date(2013,12,31),"M","Rio de Janeiro","Brasil","GPS","9012389",decimal.Decimal(9.3),"9128472")
+
+	def tearDown(self):
+		try:
+			if self.bkr.id!=None:
+				self.bkr.delete(self.cur)
+				self.conn.commit()
+		finally:
+			self.conn.close()
+			self.cur.close()
+
+
+class BlinkerModelTestCase(BKRBaseTest):
+
+	def test_A_instantiation(self):
+		assert self.bkr.name=="Mr. Capoeira"
+		assert self.bkr.birthday==datetime.date(2013,12,31)
+		assert self.bkr.gender=="M"
+		assert self.bkr.city=="Rio de Janeiro"
+		assert self.bkr.country=="Brasil"
+		assert self.bkr.location=="GPS"
+		assert self.bkr.fbid=="9012389"
+		assert self.bkr.rating==decimal.Decimal(9.3)
+		assert self.bkr.trust_cloud_id=="9128472"	
+
+	def test_B_insert(self):
+		self.bkr.insert(self.cur)
+		self.conn.commit()
+		assert self.bkr.id!=None
+
+	def test_C_exist(self):
+		self.bkr.insert(self.cur)
+		self.conn.commit()
+		assert BlinkerModel.exist(self.cur,self.bkr.id)
+
+	def test_D_get(self):
+		self.bkr.insert(self.cur)
+		bkr_get = BlinkerModel.get(self.cur,self.bkr.id)
+
+		assert self.bkr.name==bkr_get.name
+		assert self.bkr.birthday==bkr_get.birthday
+		assert self.bkr.gender==bkr_get.gender
+		assert self.bkr.city==bkr_get.city
+		assert self.bkr.country==bkr_get.country
+		assert self.bkr.location==bkr_get.location
+		assert self.bkr.fbid==bkr_get.fbid
+		assert self.bkr.rating==bkr_get.rating
+		assert self.bkr.trust_cloud_id==bkr_get.trust_cloud_id
+
+	def test_E_update(self):
+		self.bkr.insert(self.cur)
+		
+		
+		self.bkr.name = "Mr. Capoeira Boladao"
+		self.bkr.birthday = datetime.date(2014,01,26)
+		self.bkr.gender = "F"
+		self.bkr.city = "Manaus"
+		self.bkr.country = "Norway"
+		self.bkr.location = "GPSSS"
+		self.bkr.fbid = "123123213"
+		self.bkr.rating = decimal.Decimal(8.1)
+		self.bkr.trust_cloud_id = "u9r89303"
+
+		self.bkr.update(self.cur)
+		self.conn.commit()
+
+		bkr_get = BlinkerModel.get(self.cur,self.bkr.id)
+	
+		assert self.bkr.name==bkr_get.name
+		assert self.bkr.birthday==bkr_get.birthday
+		assert self.bkr.gender==bkr_get.gender
+		assert self.bkr.city==bkr_get.city
+		assert self.bkr.country==bkr_get.country
+		assert self.bkr.location==bkr_get.location
+		assert self.bkr.fbid==bkr_get.fbid
+		assert self.bkr.rating==bkr_get.rating
+		assert self.bkr.trust_cloud_id==bkr_get.trust_cloud_id
+
+	def test_F_check_fbid(self):
+		self.bkr.insert(self.cur)
+		self.conn.commit()
+
+		assert BlinkerModel.check_fbid(self.cur,self.bkr.fbid)!=None
+
+def run_BKR_test_suite():
+	suite = unittest.makeSuite(BlinkerModelTestCase,"test")
+	runner = unittest.TextTestRunner()
+	runner.run(suite)
+
+#InternationalBlinkerModel
 
 class IBMBaseTest(unittest.TestCase):
 	def setUp(self):
@@ -362,18 +466,359 @@ def run_IBM_test_suite():
 		conn.commit()
 
 
+#RequestModel
+
+class REQBaseTest(unittest.TestCase):
+	def setUp(self):
+		self.conn = db.connect_database(Config.DATABASE_URL)
+		self.cur = self.conn.cursor()
+		self.req = RequestModel(2000,0,"A",100)
+
+	def tearDown(self):
+		try:
+			if self.req.id!=None:
+				self.req.delete(self.cur)
+				self.conn.commit()
+		finally:
+			self.conn.close()
+			self.cur.close()
+
+class RequestModelTestCase(REQBaseTest):
+
+	def test_A_instantiation(self):
+		assert self.req.activity_id==2000
+		assert self.req.type==0
+		assert self.req.status=="A"
+		assert self.req.user_id==100
+
+	def test_B_insert(self):
+		self.req.insert(self.cur)
+		self.conn.commit()
+		assert self.req.id!=None
+
+	def test_C_exist(self):
+		self.req.insert(self.cur)
+		self.conn.commit()
+		assert RequestModel.exist(self.cur,self.req.id)
+
+	def test_D_get(self):
+		self.req.insert(self.cur)
+		req_get = RequestModel.get(self.cur,self.req.id)
+
+		assert self.req.activity_id==req_get.activity_id
+		assert self.req.type==req_get.type
+		assert self.req.status==req_get.status
+		assert self.req.user_id==req_get.user_id
+
+	def test_E_update(self):
+		self.req.insert(self.cur)
+		
+		self.req.activity_id = 2001
+		self.req.type = 1
+		self.req.status = "B"
+		self.req.user_id = 101
+
+		self.req.update(self.cur)
+		self.conn.commit()
+
+		req_get = RequestModel.get(self.cur,self.req.id)
+	
+		assert self.req.activity_id==req_get.activity_id
+		assert self.req.type==req_get.type
+		assert self.req.status==req_get.status
+		assert self.req.user_id==req_get.user_id
+
+def run_REQ_test_suite():
+	try:
+		conn = db.connect_database(Config.DATABASE_URL)
+		cur = conn.cursor()		
+
+		b1 = BlinkerModel("Testivaldo","2013/01/16","M", "Teste City","Testelandia","23 16 143","91846273",7.8,None)
+		b2 = BlinkerModel("Testivaldo Junior","2013/01/26","F", "Testelopolis","Pais dos Testes","29 41 09","1763301",8.5,None)
+
+		b1.insert(cur,100)
+		b2.insert(cur,101)
+
+		a1 = ActivityModel("Atividade Teste","Teste, Esporte, Educação")
+		a2 = ActivityModel("Atividade Testeita","Divertido, Cinema, Social")
+
+		a1.insert(cur,2000)
+		a2.insert(cur,2001)
+
+		conn.commit()		
+
+		suite = unittest.makeSuite(RequestModelTestCase,"test")
+		runner = unittest.TextTestRunner()
+		runner.run(suite)
+	except Exception as inst:
+		raise inst
+	finally:
+		b1.delete(cur)
+		b2.delete(cur)
+
+		a1.delete(cur)
+		a2.delete(cur)
+
+		conn.commit()
+
+		conn.close()
+		cur.close()
+
+
+#ActivityModel
+
+class ACTBaseTest(unittest.TestCase):
+	def setUp(self):
+		self.conn = db.connect_database(Config.DATABASE_URL)
+		self.cur = self.conn.cursor()
+		self.act = ActivityModel("Dancar Cuduro","Reggaeton, Cuduro, Angolano")
+
+	def tearDown(self):
+		try:
+			if self.act.id!=None:
+				self.act.delete(self.cur)
+				self.conn.commit()
+		finally:
+			self.conn.close()
+			self.cur.close()
+
+class ActivityModelTestCase(ACTBaseTest):
+
+	def test_A_instantiation(self):
+		assert self.act.name=="Dancar Cuduro"
+		assert self.act.keywords=="Reggaeton, Cuduro, Angolano"
+
+	def test_B_insert(self):
+		self.act.insert(self.cur)
+		self.conn.commit()
+		assert self.act.id!=None
+
+	def test_C_exist(self):
+		self.act.insert(self.cur)
+		self.conn.commit()
+		assert ActivityModel.exist(self.cur,self.act.id)
+
+	def test_D_get(self):
+		self.act.insert(self.cur)
+		act_get = ActivityModel.get(self.cur,self.act.id)
+
+		assert self.act.name==act_get.name
+		assert self.act.keywords==act_get.keywords
+
+	def test_E_update(self):
+		self.act.insert(self.cur)
+		
+		self.act.name = "Counting Stars"
+		self.act.keywords = "Ruby, OneRepublic"
+
+		self.act.update(self.cur)
+		self.conn.commit()
+
+		act_get = ActivityModel.get(self.cur,self.act.id)
+	
+		assert self.act.name==act_get.name
+		assert self.act.keywords==act_get.keywords
+
+def run_ACT_test_suite():
+	suite = unittest.makeSuite(ActivityModelTestCase,"test")
+	runner = unittest.TextTestRunner()
+	runner.run(suite)
+
+
+#AccessCodeModel
+
+class ACMBaseTest(unittest.TestCase):
+	def setUp(self):
+		self.conn = db.connect_database(Config.DATABASE_URL)
+		self.cur = self.conn.cursor()
+		self.acm = AccessCodeModel("aljas023DKD","I","N", "TEST CASE",100)
+
+	def tearDown(self):
+		try:
+			if self.acm.id!=None:
+				self.acm.delete(self.cur)
+				self.conn.commit()
+		finally:
+			self.conn.close()
+			self.cur.close()
+
+class AccessCodeModelTestCase(ACMBaseTest):
+
+	def test_A_instantiation(self):
+		assert self.acm.access_code=="aljas023DKD"
+		assert self.acm.type=="I"
+		assert self.acm.status=="N"
+		assert self.acm.extra_field=="TEST CASE"
+		assert self.acm.used_by==100
+
+	def test_B_insert(self):
+		self.acm.insert(self.cur)
+		self.conn.commit()
+		assert self.acm.id!=None
+
+	def test_C_exist(self):
+		self.acm.insert(self.cur)
+		self.conn.commit()
+		assert AccessCodeModel.exist(self.cur,self.acm.id)
+
+	def test_D_get(self):
+		self.acm.insert(self.cur)
+		acm_get = AccessCodeModel.get(self.cur,self.acm.id)
+
+		assert self.acm.access_code==acm_get.access_code
+		assert self.acm.type==acm_get.type
+		assert self.acm.status==acm_get.status
+		assert self.acm.extra_field==acm_get.extra_field
+		assert self.acm.used_by==acm_get.used_by
+
+	def test_E_update(self):
+		self.acm.insert(self.cur)
+		
+		self.acm.access_code = "kasjdoiahdlka"
+		self.acm.type = "S"
+		self.acm.status = "U"
+		self.acm.extra_field = "Jason Derulo"
+		self.acm.used_by = 101
+
+		self.acm.update(self.cur)
+		self.conn.commit()
+
+		acm_get = AccessCodeModel.get(self.cur,self.acm.id)
+	
+		assert self.acm.access_code==acm_get.access_code
+		assert self.acm.type==acm_get.type
+		assert self.acm.status==acm_get.status
+		assert self.acm.extra_field==acm_get.extra_field
+		assert self.acm.used_by==acm_get.used_by
+
+	def test_G_is_valid(self):
+		self.acm.insert(self.cur)
+		assert AccessCodeModel.is_valid(self.cur,self.acm.access_code)
+
+	def test_H_check_code(self):
+		self.acm.insert(self.cur)		
+		self.acm.check_code(self.cur,100)
+
+		assert self.acm.status=="U"
+		assert self.acm.used_by!=None
+
+	def test_I_get_w_access_code(self):
+		self.acm.insert(self.cur)
+		self.conn.commit()
+
+		assert AccessCodeModel.get_w_access_code(self.cur,self.acm.access_code)!=None
+
+def run_ACM_test_suite():
+	try:
+		conn = db.connect_database(Config.DATABASE_URL)
+		cur = conn.cursor()		
+
+		b1 = BlinkerModel("Testivaldo","2013/01/16","M", "Teste City","Testelandia","23 16 143","91846273",7.8,None)
+		b2 = BlinkerModel("Testivaldo Junior","2013/01/26","F", "Testelopolis","Pais dos Testes","29 41 09","1763301",8.5,None)
+
+		b1.insert(cur,100)
+		b2.insert(cur,101)
+
+		conn.commit()		
+
+		suite = unittest.makeSuite(AccessCodeModelTestCase,"test")
+		runner = unittest.TextTestRunner()
+		runner.run(suite)
+	except Exception as inst:
+		raise inst
+	finally:
+		b1.delete(cur)
+		b2.delete(cur)
+
+		conn.commit()
+
+		conn.close()
+		cur.close()	
+
+
+#CategoryModel
+
+class CATBaseTest(unittest.TestCase):
+	def setUp(self):
+		self.conn = db.connect_database(Config.DATABASE_URL)
+		self.cur = self.conn.cursor()
+		self.cat = CategoryModel("Outside Activity")
+
+	def tearDown(self):
+		try:
+			if self.cat.id!=None:
+				self.cat.delete(self.cur)
+				self.conn.commit()
+		finally:
+			self.conn.close()
+			self.cur.close()
+
+class CategoryModelTestCase(CATBaseTest):
+
+	def test_A_instantiation(self):
+		assert self.cat.name=="Outside Activity"
+
+	def test_B_insert(self):
+		self.cat.insert(self.cur)
+		self.conn.commit()
+		assert self.cat.id!=None
+
+	def test_C_exist(self):
+		self.cat.insert(self.cur)
+		self.conn.commit()
+		assert CategoryModel.exist(self.cur,self.cat.id)
+
+	def test_D_get(self):
+		self.cat.insert(self.cur)
+		cat_get = CategoryModel.get(self.cur,self.cat.id)
+
+		assert self.cat.name==cat_get.name
+
+	def test_E_update(self):
+		self.cat.insert(self.cur)
+		
+		self.cat.name = "Dance and Sing"
+
+		self.cat.update(self.cur)
+		self.conn.commit()
+
+		cat_get = CategoryModel.get(self.cur,self.cat.id)
+	
+		assert self.cat.name==cat_get.name
+
+def run_CAT_test_suite():
+	suite = unittest.makeSuite(CategoryModelTestCase,"test")
+	runner = unittest.TextTestRunner()
+	runner.run(suite)
+
+
 def main():
-	# print "InternationalBlinkerModel Test Suite"
-	# run_IBM_test_suite()
+	print "InternationalBlinkerModel Test Suite"
+	run_IBM_test_suite()
 
-	# print "ContactModel Test Suite"	
-	# run_CM_test_suite()
+	print "ContactModel Test Suite"	
+	run_CM_test_suite()
 
-	# print "DocumentModel Test Suite"	
-	# run_DM_test_suite()
+	print "DocumentModel Test Suite"	
+	run_DM_test_suite()
 
 	print "Blink Model Test Suite"
 	run_BM_test_suite()
+
+	print "Blinker Model Test Suite"
+	run_BKR_test_suite()	
+
+	print "Request Model Test Suite"
+	run_REQ_test_suite()		
+
+	print "Activity Model Test Suite"
+	run_ACT_test_suite()		
+
+	print "Access Code Model Test Suite"
+	run_ACM_test_suite()	
+
+	print "Category Model Test Suite"
+	run_CAT_test_suite()		
 
 if __name__=='__main__':
 	main()

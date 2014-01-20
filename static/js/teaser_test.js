@@ -1,26 +1,19 @@
 // Functional Inherits Implemented
 var debug_flag = true;
 
-function IPTestObject(){
-	var rb = Rollback();
+function BaseTestObject(){
 
-	this.callback = function(r){
-		console.log(r);
-		if(r.user_data ==null)
-			return;
-		if(r.user_data.test_data==null)
-			return;
+    this.callback = function(r){
+            console.log(r);
+            if(r.user_data ==null)
+                    return;
+            if(r.user_data.test_data==null)
+                    return;
+    }
 
-		for(var i=0;i<r.user_data.test_data.length;i++){
-			rb.addRollbackData(r.user_data.test_data[i]);	
-		}			
-		// console.log( JSON.stringify( rb.getData() ) );
-	}
-
-	this.endTest = function(){
-		console.log("FINAL TESTE");
-		rb.rollback();
-	}
+    this.endTest = function(){
+            console.log("FINAL TESTE");
+    }
 
 }
 
@@ -81,36 +74,9 @@ function LogicalTest(ip){
 		}else if(stage==8){
 			$(".field-container .btn").click();			
 		}else if(stage==9){
-			// console.log("ROLLBACK");
-			ip.test_callback.endTest();
+			console.log("ROLLBACK");
 		}
 
 		stage = (stage+1);
 	};
-}
-
-var Rollback = function(){
-	var that = CallTest({testObject:null});
-
-	var rollbackData = [];
-
-	var fn_success = function(r){
-
-	}
-
-	var fn_error = function(r){
-
-	}
-
-	that.addRollbackData = function(data){
-		rollbackData.push(data);
-	}
-
-	that.rollback = function(){
-		that.serverRequest("POST",{ "rollbackObj":JSON.stringify(rollbackData) },"/rollback",fn_success,fn_error);
-	}
-
-	that.getData = function(){return rollbackData;}
-
-	return that;
 }

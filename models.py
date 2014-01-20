@@ -339,7 +339,10 @@ class BlinkerModel():
 
             cur.execute( sql,data )   
 
-            return cur.rowcount==0
+            if cur.rowcount>0:
+                return cur.fetchone()[0]
+            else:
+                None
         except psycopg2.Error as inst:
             raise BlinkException('Blinker_check_fbid','Database Error',inst.pgerror,{"1":sql % data})
         except Exception as inst:
@@ -347,7 +350,8 @@ class BlinkerModel():
 
     def insert(self,cur,_id=None):
         try:
-            if BlinkerModel.check_fbid(cur,self.fbid):
+            current_id = BlinkerModel.check_fbid(cur,self.fbid)
+            if current_id==None:
                 if _id==None:
                     sql = "INSERT INTO blinker(name,birthday,gender,city,country,location,fbid,rating,trust_cloud_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id"
                     data = (self.name,
@@ -375,7 +379,20 @@ class BlinkerModel():
                 cur.execute(sql,data)            
                 self.id = cur.fetchone()[0]            
             else:
-                self.id = cur.fetchone()[0]
+                current_bm = BlinkerModel.get(cur,current_id) 
+                data = (current_bm.name,
+                              current_bm.birthday,
+                              current_bm.gender,
+                              current_bm.city,
+                              current_bm.country,
+                              current_bm.location,
+                              current_bm.fbid,
+                              current_bm.rating,
+                              current_bm.trust_cloud_id,
+                              current_bm.id)
+
+                self.__fill__(data)
+
         except psycopg2.Error as inst:
             raise BlinkException('insert_blinker','Database Error',inst.pgerror,{"1":sql % data})                               
         except Exception as inst:
@@ -528,13 +545,13 @@ class InternationalBlinkerModel():
             raise BlinkException('Insert_International','Not Identified. Mysterious Error',inst.args,{})     	
 
 class RequestModel():
-    def __init__(self,_activity_id,_request_type,_status,_user_id,_id=None):
-        data = (_activity_id,_request_type,_status,_user_1_id,_id)
+    def __init__(self,_activity_id,_type,_status,_user_id,_id=None):
+        data = (_activity_id,_type,_status,_user_id,_id)
         self.__fill__(data)
 
     def __fill__(self,_row):
         self.activity_id = _row[0]
-        self.request_type = _row[1]
+        self.type = _row[1]
         self.status = _row[2]
         self.user_id = _row[3]
         self.id = _row[4] 
@@ -542,7 +559,7 @@ class RequestModel():
     @staticmethod
     def get(cur,_id):
         try:
-            sql = "SELECT activity_id,request_type,status,user_id,id FROM request WHERE id=%s"
+            sql = "SELECT activity_id,type,status,user_id,id FROM request WHERE id=%s"
             data = (_id,)
             cur.execute(sql,data)
 
@@ -571,9 +588,9 @@ class RequestModel():
 
     def update(self,cur): 
         try:
-            sql = "UPDATE request SET activity_id=%s, request_type=%s, status=%s, user_id=%s WHERE id=%s"
+            sql = "UPDATE request SET activity_id=%s, type=%s, status=%s, user_id=%s WHERE id=%s"
             data = (self.activity_id,
-                    self.request_type,
+                    self.type,
                     self.status,
                     self.user_id,
                     self.id)             
@@ -590,14 +607,14 @@ class RequestModel():
             if _id==None:
                 sql = "INSERT INTO request(activity_id,type,user_id,status) VALUES(%s,%s,%s,%s) RETURNING id"
                 data = (self.activity_id,
-                        self.request_type,
+                        self.type,
                         self.user_id,
                         self.status)
             else:
                 sql = "INSERT INTO request(id,activity_id,type,user_id,status) VALUES(%s,%s,%s,%s,%s) RETURNING id"
                 data = (_id,
                         self.activity_id,
-                        self.request_type,
+                        self.type,
                         self.user_id,
                         self.status)                
 
@@ -623,8 +640,8 @@ class RequestModel():
             raise BlinkException('delete_request','Not Identified. Mysterious Error',inst.args,{})          
 
 class ActivityModel():
-    def __init__(self,_name,_keyword,_id=None):
-        data = (_name,_keyword,_id)
+    def __init__(self,_name,_keywords,_id=None):
+        data = (_name,_keywords,_id)
         self.__fill__(data)
 
     def __fill__(self,_row):
@@ -725,6 +742,23 @@ class AccessCodeModel():
         self.id = _row[5]
 
     @staticmethod
+    def get_w_access_code(cur,_access_code): 
+        try:
+            sql = "SELECT access_code,type,status,extra_field,used_by,id FROM access_code WHERE access_code like %s"
+            data = (_access_code,)
+
+            cur.execute(sql,data)
+            if cur.rowcount==0:
+                return None
+            else:
+                return AccessCodeModel(*cur.fetchone())
+
+        except psycopg2.Error as inst:
+            raise BlinkException('get_access','Database Error',inst.pgerror,{"1":sql % data})                               
+        except Exception as inst:
+            raise BlinkException('get_access','Not Identified. Mysterious Error',inst.args,{}) 
+
+    @staticmethod
     def get(cur,_id): 
         try:
             sql = "SELECT access_code,type,status,extra_field,used_by,id FROM access_code WHERE id=%s"
@@ -741,20 +775,33 @@ class AccessCodeModel():
         except Exception as inst:
             raise BlinkException('get_access','Not Identified. Mysterious Error',inst.args,{}) 
 
+    @staticmethod
+    def exist(cur,_id):
+        try:
+            sql = "SELECT * FROM access_code WHERE id = %s"
+            data = (_id,)
+
+            cur.execute(sql,data)
+            return cur.rowcount>0
+        except psycopg2.Error as inst:
+            raise BlinkException('access_exist','Database Error',inst.pgerror,{"1":sql % data})
+        except Exception as inst:
+            raise BlinkException('access_exist','Not Identified. Mysterious Error',inst.args,{})
+
 
     @staticmethod
     def is_valid(cur,_access_code):
         try:
-            sql = "SELECT extra_field,status FROM access_code WHERE access_code like %s"
+            sql = "SELECT status FROM access_code WHERE access_code like %s"
             data = (_access_code,)
 
-            cur.execute(query,data)
+            cur.execute(sql,data)
             if cur.rowcount>0:
                 row = cur.fetchone()
-                if row[1]!='N':
-                    return False
-                else:
+                if row[0]=='N':
                     return True
+                else:
+                    return False
             else:
                 raise BlinkCodeNotExist(access_code)
         except psycopg2.Error as inst:
@@ -764,24 +811,141 @@ class AccessCodeModel():
         except Exception as inst:
             raise BlinkException('is_valid','Not Identified. Mysterious Error',inst.args,{})
 
-    def insert(self,cur): pass
-
-    def update(self,cur): pass
-
-    def check_code(self,cur):
+    def insert(self,cur,_id=None):
         try:
-            sql = "UPDATE access_code SET used_by=%s, status='U' WHERE access_code=%s"
-            data = (self.blinker_id,
-                    self.user_code)
+            if _id==None:
+                sql = "INSERT INTO access_code(access_code,type,status,extra_field,used_by) VALUES(%s,%s,%s,%s,%s) RETURNING id"
+                data = (self.access_code,self.type,self.status,self.extra_field,self.used_by)
+            else:
+                sql = "INSERT INTO access_code(access_code,type,status,extra_field,used_by,id) VALUES(%s,%s,%s,%s,%s,%s) RETURNING id"
+                data = (self.access_code,self.type,self.status,self.extra_field,self.used_by,_id)                
 
             cur.execute(sql,data)
+            self.id = cur.fetchone()[0]
+
+        except psycopg2.Error as inst:
+            raise BlinkException('Insert_Access','Database Error',inst.pgerror,{"1":sql % data})
+        except IndexError as inst:
+            raise BlinkException('Insert_Access','Cursor is out of bounds',inst.args,{});
+        except Exception as inst:
+            raise BlinkException('Insert_Access','Not Identified. Mysterious Error',inst.args,{})
+
+    def update(self,cur): 
+        try:
+            sql = "UPDATE access_code SET access_code=%s, type=%s, status=%s, extra_field=%s, used_by=%s WHERE id=%s"
+            data = (self.access_code,self.type,self.status,self.extra_field,self.used_by,self.id)
+
+            cur.execute(sql,data)            
+        except psycopg2.Error as inst:
+            raise BlinkException('Update_Access','Database Error',inst.pgerror,{"1":sql % data})
+        except Exception as inst:
+            raise BlinkException('Update_Access','Not Identified. Mysterious Error',inst.args,{})  
+
+    def delete(self,cur):
+        try:
+            sql = "DELETE FROM access_code WHERE id=%s"
+            data = (self.id,)
+
+            cur.execute(sql,data)            
+        except psycopg2.Error as inst:
+            raise BlinkException('Delete_Access','Database Error',inst.pgerror,{"1":sql % data})
+        except Exception as inst:
+            raise BlinkException('Delete_Access','Not Identified. Mysterious Error',inst.args,{})                
+
+    def check_code(self,cur,_blinker_id):
+        try:
+            sql = "UPDATE access_code SET used_by=%s, status='U' WHERE access_code=%s"
+            data = (_blinker_id,
+                    self.access_code)
+
+            cur.execute(sql,data)
+            self.used_by = _blinker_id
+            self.status = "U"
         except psycopg2.Error as inst:
             raise BlinkException('check_code','Database Error',inst.pgerror,{"1":sql % data})
         except Exception as inst:
             raise BlinkException('check_code','Not Identified. Mysterious Error',inst.args,{})
 
-# class CategoryModel():
-#     def __init__(self,):        
+class CategoryModel():
+    def __init__(self,_name,_id=None):
+        data = (_name,_id)
+        self.__fill__(data)
+
+    def __fill__(self,_row):
+        self.name = _row[0]
+        self.id = _row[1]        
+
+    @staticmethod
+    def exist(cur,_id):
+        try:
+            sql="SELECT * FROM category WHERE id=%s"
+            data = (_id,)
+
+            cur.execute(sql,data)
+            return cur.rowcount>0
+        except psycopg2.Error as inst:
+            raise BlinkException('exist_Category','Database Error',inst.pgerror,{"1":sql % data})
+        except Exception as inst:
+            raise BlinkException('exist_Category','Not Identified. Mysterious Error',inst.args,{})
+
+    @staticmethod
+    def get(cur,_id):
+        try:
+            sql="SELECT name,id FROM category WHERE id=%s"
+            data = (_id,)
+
+            cur.execute(sql,data)
+            if cur.rowcount>0:
+                return CategoryModel(*cur.fetchone())
+            else:
+                return None
+        except psycopg2.Error as inst:
+            raise BlinkException('get_Category','Database Error',inst.pgerror,{"1":sql % data})
+        except Exception as inst:
+            raise BlinkException('get_Category','Not Identified. Mysterious Error',inst.args,{})
+
+    def insert(self,cur,_id=None):
+        try:
+            if _id==None:
+                sql="INSERT INTO category(name) VALUES(%s) RETURNING id"
+                data = (self.name,)
+            else:
+                sql="INSERT INTO category(id,name) VALUES(%s,%s) RETURNING id"
+                data = (_id,
+                        self.name)                
+
+            cur.execute(sql,data)
+            self.id=cur.fetchone()[0]
+            
+        except psycopg2.Error as inst:
+            raise BlinkException('update_Category','Database Error',inst.pgerror,{"1":sql % data})
+        except IndexError as inst:
+            raise BlinkException('Insert_Category','Cursor is out of bounds',inst.args,{});            
+        except Exception as inst:
+            raise BlinkException('update_Category','Not Identified. Mysterious Error',inst.args,{}) 
+
+    def update(self,cur):
+        try:
+            sql="UPDATE category SET name=%s WHERE id=%s"
+            data = (self.name,
+                    self.id)
+
+            cur.execute(sql,data)
+        except psycopg2.Error as inst:
+            raise BlinkException('update_Category','Database Error',inst.pgerror,{"1":sql % data})
+        except Exception as inst:
+            raise BlinkException('update_Category','Not Identified. Mysterious Error',inst.args,{})  
+
+    def delete(self,cur):
+        try:
+            sql="DELETE FROM category WHERE id=%s"
+            data = (self.id,)
+
+            cur.execute(sql,data)
+        except psycopg2.Error as inst:
+            raise BlinkException('delete_Category','Database Error',inst.pgerror,{"1":sql % data})
+        except Exception as inst:
+            raise BlinkException('delete_Category','Not Identified. Mysterious Error',inst.args,{})        
 
 # class RelatedActivityModel():
 #     def __init__(self,):
